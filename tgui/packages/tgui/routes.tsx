@@ -4,11 +4,12 @@
  * @license MIT
  */
 
+import { Icon, Section, Stack } from './components';
+
 import { Store } from 'common/redux';
 import { Window } from './layouts';
 import { selectBackend } from './backend';
 import { selectDebug } from './debug/selectors';
-import { LoadingScreen } from './interfaces/common/LoadingToolbox';
 
 const requireInterface = require.context('./interfaces');
 
@@ -46,7 +47,14 @@ const RefreshingWindow = () => {
   return (
     <Window title="Loading">
       <Window.Content>
-        <LoadingScreen />
+        <Section fill>
+          <Stack align="center" fill justify="center" vertical>
+            <Stack.Item>
+              <Icon color="blue" name="toolbox" spin size={4} />
+            </Stack.Item>
+            <Stack.Item>Please wait...</Stack.Item>
+          </Stack>
+        </Section>
       </Window.Content>
     </Window>
   );
@@ -81,7 +89,7 @@ export const getRoutedComponent = (store: Store) => {
     const interfacePathBuilder = interfacePathBuilders.shift()!;
     const interfacePath = interfacePathBuilder(name);
     try {
-      esModule = requireInterface(interfacePath);
+      esModule = getComponent(interfacePath); // Fulp edit - We use getComponent instead to make sure our files are read. //esModule = requireInterface(interfacePath);
     } catch (err) {
       if (err.code !== 'MODULE_NOT_FOUND') {
         throw err;
@@ -97,3 +105,18 @@ export const getRoutedComponent = (store: Store) => {
   }
   return Component;
 };
+
+// Fulp edit - Adding our Interfaces to the list of UIs that are read.
+const requireFulpInterface = require.context('../fulpui-patches');
+const getComponent = (interfacePath) => {
+  let esModule = null;
+
+  try {
+    esModule = requireFulpInterface(interfacePath);
+  } catch (err) {
+    esModule = requireInterface(interfacePath);
+  }
+
+  return esModule;
+};
+// Fulp edit END

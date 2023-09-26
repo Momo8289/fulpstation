@@ -221,7 +221,7 @@
 	user.add_mood_event("maint_adaptation", /datum/mood_event/maintenance_adaptation)
 	if(iscarbon(user))
 		var/mob/living/carbon/vomitorium = user
-		vomitorium.vomit(VOMIT_CATEGORY_DEFAULT)
+		vomitorium.vomit()
 		var/datum/dna/dna = vomitorium.has_dna()
 		dna?.add_mutation(/datum/mutation/human/stimmed) //some fluff mutations
 		dna?.add_mutation(/datum/mutation/human/strong)

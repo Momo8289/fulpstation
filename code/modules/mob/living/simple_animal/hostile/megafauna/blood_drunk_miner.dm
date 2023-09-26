@@ -75,7 +75,6 @@ Difficulty: Medium
 	kinetic_accelerator.Grant(src)
 	dash_attack.Grant(src)
 	transform_weapon.Grant(src)
-	AddComponent(/datum/component/boss_music, 'sound/lavaland/bdm_boss.ogg', 167 SECONDS)
 
 /mob/living/simple_animal/hostile/megafauna/blood_drunk_miner/Destroy()
 	QDEL_NULL(dash)
@@ -137,12 +136,15 @@ Difficulty: Medium
 	if(isliving(target))
 		var/mob/living/living_target = target
 		if(living_target.stat == DEAD)
+			visible_message(span_danger("[src] butchers [living_target]!"),
+			span_userdanger("You butcher [living_target], restoring your health!"))
 			if(!is_station_level(z) || client) //NPC monsters won't heal while on station
 				if(guidance)
 					adjustHealth(-living_target.maxHealth)
 				else
 					adjustHealth(-(living_target.maxHealth * 0.5))
-			devour(living_target)
+			living_target.investigate_log("has been gibbed by [src].", INVESTIGATE_DEATHS)
+			living_target.gib()
 			return TRUE
 	changeNext_move(CLICK_CD_MELEE)
 	miner_saw.melee_attack_chain(src, target)

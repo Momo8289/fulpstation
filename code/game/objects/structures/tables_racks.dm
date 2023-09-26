@@ -66,7 +66,7 @@
 
 	if(istype(held_item, /obj/item/toy/cards/deck))
 		var/obj/item/toy/cards/deck/dealer_deck = held_item
-		if(HAS_TRAIT(dealer_deck, TRAIT_WIELDED))
+		if(dealer_deck.wielded)
 			context[SCREENTIP_CONTEXT_LMB] = "Deal card"
 			context[SCREENTIP_CONTEXT_RMB] = "Deal card faceup"
 			. = CONTEXTUAL_SCREENTIP_SET
@@ -165,13 +165,16 @@
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_danger("Throwing [pushed_mob] onto the table might hurt them!"))
 		return
-	var/passtable_key = REF(user)
-	passtable_on(pushed_mob, passtable_key)
+	var/added_passtable = FALSE
+	if(!(pushed_mob.pass_flags & PASSTABLE))
+		added_passtable = TRUE
+		pushed_mob.pass_flags |= PASSTABLE
 	for (var/obj/obj in user.loc.contents)
 		if(!obj.CanAllowThrough(pushed_mob))
 			return
 	pushed_mob.Move(src.loc)
-	passtable_off(pushed_mob, passtable_key)
+	if(added_passtable)
+		pushed_mob.pass_flags &= ~PASSTABLE
 	if(pushed_mob.loc != loc) //Something prevented the tabling
 		return
 	pushed_mob.Knockdown(30)
@@ -235,7 +238,7 @@
 
 	if(istype(I, /obj/item/toy/cards/deck))
 		var/obj/item/toy/cards/deck/dealer_deck = I
-		if(HAS_TRAIT(dealer_deck, TRAIT_WIELDED)) // deal a card facedown on the table
+		if(dealer_deck.wielded) // deal a card facedown on the table
 			var/obj/item/toy/singlecard/card = dealer_deck.draw(user)
 			if(card)
 				attackby(card, user, params)
@@ -281,7 +284,7 @@
 /obj/structure/table/attackby_secondary(obj/item/weapon, mob/user, params)
 	if(istype(weapon, /obj/item/toy/cards/deck))
 		var/obj/item/toy/cards/deck/dealer_deck = weapon
-		if(HAS_TRAIT(dealer_deck, TRAIT_WIELDED)) // deal a card faceup on the table
+		if(dealer_deck.wielded) // deal a card faceup on the table
 			var/obj/item/toy/singlecard/card = dealer_deck.draw(user)
 			if(card)
 				card.Flip()
@@ -311,7 +314,7 @@
 /obj/structure/table/rcd_vals(mob/user, obj/item/construction/rcd/the_rcd)
 	switch(the_rcd.mode)
 		if(RCD_DECONSTRUCT)
-			return list("mode" = RCD_DECONSTRUCT, "delay" = 2.4 SECONDS, "cost" = 16)
+			return list("mode" = RCD_DECONSTRUCT, "delay" = 24, "cost" = 16)
 	return FALSE
 
 /obj/structure/table/rcd_act(mob/user, obj/item/construction/rcd/the_rcd, passed_mode)

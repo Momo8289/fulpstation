@@ -5,7 +5,7 @@
 	name = "resting contraption"
 	desc = "This looks similar to contraptions from Earth. Could aliens be stealing our technology?"
 	icon = 'icons/obj/antags/abductor.dmi'
-	build_stack_type = /obj/item/stack/sheet/mineral/abductor
+	buildstacktype = /obj/item/stack/sheet/mineral/abductor
 	icon_state = "bed"
 
 /obj/structure/table_frame/abductor

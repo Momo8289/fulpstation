@@ -38,37 +38,43 @@
 
 ///ABDUCTOR
 /obj/item/bodypart/head/abductor
+	biological_state = BIO_INORGANIC //i have no fucking clue why these mfs get no wounds but SURE
 	limb_id = SPECIES_ABDUCTOR
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	head_flags = NONE
 
 /obj/item/bodypart/chest/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_ABDUCTOR
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/arm/left/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_ABDUCTOR
 	should_draw_greyscale = FALSE
 	bodypart_traits = list(TRAIT_CHUNKYFINGERS)
 
 /obj/item/bodypart/arm/right/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_ABDUCTOR
 	should_draw_greyscale = FALSE
 	bodypart_traits = list(TRAIT_CHUNKYFINGERS)
 
 /obj/item/bodypart/leg/left/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_ABDUCTOR
 	should_draw_greyscale = FALSE
 
 /obj/item/bodypart/leg/right/abductor
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_ABDUCTOR
 	should_draw_greyscale = FALSE
 
 ///JELLY
 /obj/item/bodypart/head/jelly
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_JELLYPERSON
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
@@ -76,90 +82,90 @@
 	head_flags = HEAD_ALL_FEATURES
 
 /obj/item/bodypart/chest/jelly
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_JELLYPERSON
 	is_dimorphic = TRUE
 	dmg_overlay_type = null
 	burn_modifier = 0.5 // = 1/2x generic burn damage
 
 /obj/item/bodypart/arm/left/jelly
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_JELLYPERSON
 	dmg_overlay_type = null
 	burn_modifier = 0.5 // = 1/2x generic burn damage
 
 /obj/item/bodypart/arm/right/jelly
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_JELLYPERSON
 	dmg_overlay_type = null
 	burn_modifier = 0.5 // = 1/2x generic burn damage
 
 /obj/item/bodypart/leg/left/jelly
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_JELLYPERSON
 	dmg_overlay_type = null
 	burn_modifier = 0.5 // = 1/2x generic burn damage
 
 /obj/item/bodypart/leg/right/jelly
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_JELLYPERSON
 	dmg_overlay_type = null
 	burn_modifier = 0.5 // = 1/2x generic burn damage
 
 ///SLIME
 /obj/item/bodypart/head/slime
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SLIMEPERSON
 	is_dimorphic = FALSE
 	head_flags = HEAD_ALL_FEATURES
 
 /obj/item/bodypart/chest/slime
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SLIMEPERSON
 	is_dimorphic = TRUE
 
 /obj/item/bodypart/arm/left/slime
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SLIMEPERSON
 
 /obj/item/bodypart/arm/right/slime
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SLIMEPERSON
 
 /obj/item/bodypart/leg/left/slime
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SLIMEPERSON
 
 /obj/item/bodypart/leg/right/slime
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SLIMEPERSON
 
 ///LUMINESCENT
 /obj/item/bodypart/head/luminescent
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = TRUE
 	head_flags = HEAD_ALL_FEATURES
 
 /obj/item/bodypart/chest/luminescent
-	biological_state = (BIO_FLESH|BIO_BLOODED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_LUMINESCENT
 	is_dimorphic = TRUE
 
 /obj/item/bodypart/arm/left/luminescent
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_LUMINESCENT
 
 /obj/item/bodypart/arm/right/luminescent
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_LUMINESCENT
 
 /obj/item/bodypart/leg/left/luminescent
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_LUMINESCENT
 
 /obj/item/bodypart/leg/right/luminescent
-	biological_state = (BIO_FLESH|BIO_BLOODED|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_LUMINESCENT
 
 ///ZOMBIE
@@ -266,6 +272,7 @@
 
 ///SHADOW
 /obj/item/bodypart/head/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SHADOW
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
@@ -273,27 +280,32 @@
 	head_flags = NONE
 
 /obj/item/bodypart/chest/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SHADOW
 	is_dimorphic = FALSE
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.5
 
 /obj/item/bodypart/arm/left/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SHADOW
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.5
 
 /obj/item/bodypart/arm/right/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SHADOW
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.5
 
 /obj/item/bodypart/leg/left/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SHADOW
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.5
 
 /obj/item/bodypart/leg/right/shadow
+	biological_state = BIO_INORGANIC
 	limb_id = SPECIES_SHADOW
 	should_draw_greyscale = FALSE
 	burn_modifier = 1.5
@@ -321,25 +333,25 @@
 	dmg_overlay_type = null
 
 /obj/item/bodypart/arm/left/skeleton
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_BONE
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 
 /obj/item/bodypart/arm/right/skeleton
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_BONE
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 
 /obj/item/bodypart/leg/left/skeleton
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_BONE
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
 
 /obj/item/bodypart/leg/right/skeleton
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_BONE
 	limb_id = SPECIES_SKELETON
 	should_draw_greyscale = FALSE
 	dmg_overlay_type = null
@@ -392,7 +404,7 @@
 	icon = 'icons/mob/human/species/golems.dmi'
 	icon_static = 'icons/mob/human/species/golems.dmi'
 	icon_state = "golem_head"
-	biological_state = BIO_BONE
+	biological_state = BIO_INORGANIC
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	is_dimorphic = FALSE
@@ -429,7 +441,7 @@
 	icon = 'icons/mob/human/species/golems.dmi'
 	icon_static = 'icons/mob/human/species/golems.dmi'
 	icon_state = "golem_chest"
-	biological_state = BIO_BONE
+	biological_state = BIO_INORGANIC
 	acceptable_bodytype = BODYTYPE_GOLEM
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
@@ -450,7 +462,7 @@
 	icon = 'icons/mob/human/species/golems.dmi'
 	icon_static = 'icons/mob/human/species/golems.dmi'
 	icon_state = "golem_l_arm"
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
@@ -484,7 +496,7 @@
 	icon = 'icons/mob/human/species/golems.dmi'
 	icon_static = 'icons/mob/human/species/golems.dmi'
 	icon_state = "golem_r_arm"
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
@@ -518,7 +530,7 @@
 	icon = 'icons/mob/human/species/golems.dmi'
 	icon_static = 'icons/mob/human/species/golems.dmi'
 	icon_state = "golem_l_leg"
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE
@@ -531,7 +543,7 @@
 	icon = 'icons/mob/human/species/golems.dmi'
 	icon_static = 'icons/mob/human/species/golems.dmi'
 	icon_state = "golem_r_leg"
-	biological_state = (BIO_BONE|BIO_JOINTED)
+	biological_state = BIO_INORGANIC
 	bodytype = BODYTYPE_GOLEM | BODYTYPE_ORGANIC
 	limb_id = SPECIES_GOLEM
 	should_draw_greyscale = FALSE

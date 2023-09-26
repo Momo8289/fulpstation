@@ -1,4 +1,4 @@
-import { classes } from 'common/react';
+import { BooleanLike, classes } from 'common/react';
 import { createSearch } from 'common/string';
 import { flow } from 'common/fp';
 import { sortBy } from 'common/collections';
@@ -30,13 +30,9 @@ type SeedData = {
   potency: number;
   instability: number;
   icon: string;
-  volume_mod: number;
+  volume_mod: BooleanLike;
   traits: string[];
   reagents: ReagentData[];
-  mutatelist: string[];
-  grind_results: string[];
-  distill_reagent: string;
-  juice_name: string;
 };
 
 type SeedExtractorData = {
@@ -60,7 +56,7 @@ export const SeedExtractor = (props, context) => {
   ])(seeds_filtered || []);
   sortField !== 'name' && seeds.reverse();
   return (
-    <Window width={800} height={500}>
+    <Window width={1080} height={400}>
       <Window.Content scrollable>
         <Section>
           <Table>
@@ -77,80 +73,87 @@ export const SeedExtractor = (props, context) => {
               <Table.Cell collapsing p={1}>
                 <Tooltip
                   content={
-                    'Potency: Determines product mass, reagent volume and strength of effects.'
+                    'Determines product mass, reagent volume and strength of effects.'
                   }>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('potency')}>
-                    PTN
+                    Potency
                   </Box>
                 </Tooltip>
               </Table.Cell>
               <Table.Cell collapsing p={1}>
                 <Tooltip
                   content={
-                    'Yield: The number of products gathered in a single harvest.'
+                    'The number of products gathered in a single harvest.'
                   }>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('yield')}>
-                    YLD
+                    Yield
                   </Box>
                 </Tooltip>
               </Table.Cell>
               <Table.Cell collapsing p={1}>
                 <Tooltip
                   content={
-                    'Instability: The likelihood of the plant to randomize stats or mutate. Affects quality of resulting food & drinks.'
+                    'The likelihood of the plant to randomize stats or mutate.'
                   }>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('instability')}>
-                    INS
+                    Instability
                   </Box>
                 </Tooltip>
               </Table.Cell>
               <Table.Cell collapsing p={1}>
                 <Tooltip
                   content={
-                    'Endurance: The health pool of the plant that delays death. Improves quality of resulting food & drinks.'
+                    'The health pool of the plant that delays death. Affects fermentation quality.'
                   }>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('endurance')}>
-                    END
+                    Endurance
                   </Box>
                 </Tooltip>
               </Table.Cell>
               <Table.Cell collapsing p={1}>
                 <Tooltip
-                  content={`Lifespan: The age at which the plant starts decaying, in ${data.cycle_seconds} second long cycles. Improves quality of resulting food & drinks.`}>
+                  content={`The age at which the plant starts decaying, in ${data.cycle_seconds} second long cycles. Affects fermentation quality.`}>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('lifespan')}>
-                    LFS
+                    Lifespan
                   </Box>
                 </Tooltip>
               </Table.Cell>
               <Table.Cell collapsing p={1}>
                 <Tooltip
-                  content={`Maturation: The age required for the first harvest, in ${data.cycle_seconds} second long cycles.`}>
+                  content={`The age required for the first harvest, in ${data.cycle_seconds} second long cycles.`}>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('maturation')}>
-                    MTR
+                    Maturation
                   </Box>
                 </Tooltip>
               </Table.Cell>
               <Table.Cell collapsing p={1}>
                 <Tooltip
-                  content={`Production: The period of product regrowth, in ${data.cycle_seconds} second long cycles.`}>
+                  content={`The period of product regrowth, in ${data.cycle_seconds} second long cycles.`}>
                   <Box
                     style={{ 'cursor': 'pointer' }}
                     onClick={(e) => setSortField('production')}>
-                    PRD
+                    Production
                   </Box>
                 </Tooltip>
+              </Table.Cell>
+              <Table.Cell collapsing p={1}>
+                <Box
+                  style={{ 'cursor': 'pointer' }}
+                  onClick={(e) => setSortField('amount')}>
+                  Amount
+                </Box>
               </Table.Cell>
               <Table.Cell collapsing p={1} textAlign="right">
                 {sortField !== 'name' && (
@@ -186,7 +189,7 @@ export const SeedExtractor = (props, context) => {
                     />
                   </Table.Cell>
                   <Table.Cell py={0.5} px={1}>
-                    {`${item.amount}x ${item.name}`}
+                    {item.name}
                   </Table.Cell>
                   <Table.Cell py={0.5} px={1} collapsing textAlign={'right'}>
                     {item.traits?.map((trait) => (
@@ -196,34 +199,16 @@ export const SeedExtractor = (props, context) => {
                         trait_db={data.trait_db}
                       />
                     ))}
-                    {!!item.mutatelist.length && (
-                      <Tooltip
-                        content={`Mutates into: ${item.mutatelist.join(', ')}`}>
-                        <Icon name="dna" m={0.5} />
-                      </Tooltip>
-                    )}
                     {item.reagents.length > 0 && (
                       <Tooltip
                         content={
                           <ReagentTooltip
                             reagents={item.reagents}
-                            grind_results={item.grind_results}
                             potency={item.potency}
                             volume_mod={item.volume_mod}
                           />
                         }>
                         <Icon name="blender" m={0.5} />
-                      </Tooltip>
-                    )}
-                    {!!item.juice_name && (
-                      <Tooltip content={`Juicing result: ${item.juice_name}`}>
-                        <Icon name="glass-water" m={0.5} />
-                      </Tooltip>
-                    )}
-                    {!!item.distill_reagent && (
-                      <Tooltip
-                        content={`Ferments into: ${item.distill_reagent}`}>
-                        <Icon name="wine-bottle" m={0.5} />
                       </Tooltip>
                     )}
                   </Table.Cell>
@@ -243,10 +228,13 @@ export const SeedExtractor = (props, context) => {
                     <Level value={item.lifespan} max={100} />
                   </Table.Cell>
                   <Table.Cell py={0.5} px={1} collapsing>
-                    <Box textAlign="center">{item.maturation}</Box>
+                    <Box textAlign="right">{item.maturation}</Box>
                   </Table.Cell>
                   <Table.Cell py={0.5} px={1} collapsing>
-                    <Box textAlign="center">{item.production}</Box>
+                    <Box textAlign="right">{item.production}</Box>
+                  </Table.Cell>
+                  <Table.Cell py={0.5} px={1} collapsing>
+                    <Box textAlign="right">{item.amount}</Box>
                   </Table.Cell>
                   <Table.Cell
                     py={0.5}
@@ -322,10 +310,10 @@ const ReagentTooltip = (props) => {
   return (
     <Table>
       <Table.Row header>
-        <Table.Cell colspan="2">Reagents on grind:</Table.Cell>
+        <Table.Cell>Reagents</Table.Cell>
       </Table.Row>
-      {props.reagents?.map((reagent, i) => (
-        <Table.Row key={i}>
+      {props.reagents?.map((reagent) => (
+        <Table.Row key="">
           <Table.Cell>{reagent.name}</Table.Cell>
           <Table.Cell py={0.5} pl={2} textAlign={'right'}>
             {Math.max(
@@ -336,20 +324,6 @@ const ReagentTooltip = (props) => {
           </Table.Cell>
         </Table.Row>
       ))}
-      {!!props.grind_results.length && (
-        <>
-          <Table.Row header>
-            <Table.Cell colspan="2" pt={1}>
-              Nutriments turn into:
-            </Table.Cell>
-          </Table.Row>
-          {props.grind_results?.map((reagent, i) => (
-            <Table.Row key={i} colspan="2">
-              <Table.Cell>{reagent}</Table.Cell>
-            </Table.Row>
-          ))}
-        </>
-      )}
     </Table>
   );
 };

@@ -34,7 +34,9 @@
 		log_game("Z-TRACKING: [src] of type [src.type] has a Z-registration despite not having a client.")
 		update_z(null)
 
-	if(isnull(loc) || HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform)
+		return
+	if(!loc)
 		return
 
 	if(!IS_IN_STASIS(src))
@@ -46,6 +48,8 @@
 			handle_breathing(seconds_per_tick, times_fired)
 
 		handle_diseases(seconds_per_tick, times_fired)// DEAD check is in the proc itself; we want it to spread even if the mob is dead, but to handle its disease-y properties only if you're not.
+
+		handle_wounds(seconds_per_tick, times_fired)
 
 		if (QDELETED(src)) // diseases can qdel the mob via transformations
 			return
@@ -60,8 +64,6 @@
 			handle_environment(environment, seconds_per_tick, times_fired)
 
 		handle_gravity(seconds_per_tick, times_fired)
-
-	handle_wounds(seconds_per_tick, times_fired)
 
 	if(machine)
 		machine.check_eye(src)
@@ -114,7 +116,7 @@
 	for(var/bile in reagents.reagent_list)
 		var/datum/reagent/consumable/bits = bile
 		if(bits)
-			fullness += bits.get_nutriment_factor() * bits.volume / bits.metabolization_rate
+			fullness += bits.nutriment_factor * bits.volume / bits.metabolization_rate
 	return fullness
 
 /**

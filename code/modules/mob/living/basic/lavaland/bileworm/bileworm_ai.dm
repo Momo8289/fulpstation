@@ -1,6 +1,6 @@
 /datum/ai_controller/basic_controller/bileworm
 	blackboard = list(
-		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic/bileworm(),
+		BB_TARGETTING_DATUM = new /datum/targetting_datum/basic(),
 	)
 
 	planning_subtrees = list(
@@ -9,13 +9,12 @@
 		/datum/ai_planning_subtree/bileworm_execute,
 	)
 
-/datum/targetting_datum/basic/bileworm
-	ignore_sight = TRUE
-
 /datum/ai_planning_subtree/bileworm_attack
 
 /datum/ai_planning_subtree/bileworm_attack/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
-	if (!controller.blackboard_key_exists(BB_BASIC_MOB_CURRENT_TARGET))
+
+	var/mob/living/target = controller.blackboard[BB_BASIC_MOB_CURRENT_TARGET]
+	if(QDELETED(target))
 		return
 
 	var/datum/action/cooldown/mob_cooldown/resurface = controller.blackboard[BB_BILEWORM_RESURFACE]

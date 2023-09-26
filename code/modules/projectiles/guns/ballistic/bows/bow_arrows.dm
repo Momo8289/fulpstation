@@ -11,7 +11,7 @@
 	throwforce = 1
 	firing_effect_type = null
 	caliber = CALIBER_ARROW
-	///Whether the bullet type spawns another casing of the same type or not.
+	is_cased_ammo = FALSE
 	var/reusable = TRUE
 
 /obj/item/ammo_casing/arrow/Initialize(mapload)
@@ -32,17 +32,15 @@
 	damage = 50
 	speed = 1
 	range = 25
-	embedding = list(
-		embed_chance = 90,
-		fall_chance = 2,
-		jostle_chance = 2,
-		ignore_throwspeed_threshold = TRUE,
-		pain_stam_pct = 0.5,
-		pain_mult = 3,
-		jostle_pain_mult = 3,
-		rip_time = 1 SECONDS
-	)
-	shrapnel_type = /obj/item/ammo_casing/arrow
+
+/// despawning arrow type
+/obj/item/ammo_casing/arrow/despawning/dropped()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(floor_vanish)), 5 SECONDS)
+
+/obj/item/ammo_casing/arrow/despawning/proc/floor_vanish()
+	if(isturf(loc))
+		qdel(src)
 
 /// holy arrows
 /obj/item/ammo_casing/arrow/holy
@@ -59,16 +57,6 @@
 	desc = "Here it comes, cultist scum!"
 	icon_state = "holy_arrow_projectile"
 	damage = 20 //still a lot but this is roundstart gear so far less
-	shrapnel_type =/obj/item/ammo_casing/arrow/holy
-	embedding = list(
-		embed_chance = 50,
-		fall_chance = 2,
-		jostle_chance = 0,
-		ignore_throwspeed_threshold = TRUE,
-		pain_stam_pct = 0.5,
-		pain_mult = 3,
-		rip_time = 1 SECONDS
-	)
 
 /obj/projectile/bullet/arrow/holy/Initialize(mapload)
 	. = ..()
@@ -88,7 +76,6 @@
 	desc = "THE UNMATCHED POWER OF THE SUN"
 	icon_state = "holy_arrow_projectile"
 	damage = 20
-	embedding = null
 
 /obj/projectile/bullet/arrow/blazing/on_hit(atom/target, blocked, pierce_hit)
 	. = ..()

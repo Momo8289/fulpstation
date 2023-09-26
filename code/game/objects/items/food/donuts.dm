@@ -4,19 +4,16 @@
 	name = "donut"
 	desc = "Goes great with robust coffee."
 	icon = 'icons/obj/food/donuts.dmi'
-	inhand_icon_state = "donut1"
 	bite_consumption = 5
 	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 3)
 	tastes = list("donut" = 1)
-	foodtypes = JUNKFOOD | GRAIN | SUGAR | BREAKFAST
+	foodtypes = JUNKFOOD | GRAIN | FRIED | SUGAR | BREAKFAST
 	food_flags = FOOD_FINGER_FOOD
 	w_class = WEIGHT_CLASS_SMALL
-	crafting_complexity = FOOD_COMPLEXITY_2
 	var/decorated_icon = "donut_homer"
 	var/is_decorated = FALSE
 	var/extra_reagent = null
 	var/decorated_adjective = "sprinkled"
-	crafting_complexity = FOOD_COMPLEXITY_2
 
 /obj/item/food/donut/Initialize(mapload)
 	. = ..()
@@ -35,7 +32,6 @@
 	is_decorated = TRUE
 	name = "[decorated_adjective] [name]"
 	icon_state = decorated_icon //delish~!
-	inhand_icon_state = "donut2"
 	reagents.add_reagent(/datum/reagent/consumable/sprinkles, 1)
 	return TRUE
 
@@ -44,7 +40,7 @@
 	return "[icon_state]_inbox"
 
 ///Override for checkliked in edible component, because all cops LOVE donuts
-/obj/item/food/donut/proc/check_liked(mob/living/carbon/human/consumer)
+/obj/item/food/donut/proc/check_liked(fraction, mob/living/carbon/human/consumer)
 	var/obj/item/organ/internal/liver/liver = consumer.get_organ_slot(ORGAN_SLOT_LIVER)
 	if(!HAS_TRAIT(consumer, TRAIT_AGEUSIA) && liver && HAS_TRAIT(liver, TRAIT_LAW_ENFORCEMENT_METABOLISM))
 		return FOOD_LIKED
@@ -60,7 +56,6 @@
 	bite_consumption = 10
 	tastes = list("donut" = 3, "chaos" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/chaos/Initialize(mapload)
 	. = ..()
@@ -90,7 +85,6 @@
 	tastes = list("meat" = 1)
 	foodtypes = JUNKFOOD | MEAT | GORE | FRIED | BREAKFAST
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/berry
 	name = "pink donut"
@@ -115,7 +109,6 @@
 	)
 	tastes = list("donut" = 3, "violets" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/apple
 	name = "apple donut"
@@ -155,7 +148,6 @@
 	) //the coco reagent is just bitter.
 	tastes = list("donut" = 4, "bitterness" = 1)
 	decorated_icon = "donut_choc_sprinkles"
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/blumpkin
 	name = "blumpkin donut"
@@ -169,7 +161,6 @@
 	)
 	tastes = list("donut" = 2, "blumpkin" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/bungo
 	name = "bungo donut"
@@ -208,7 +199,6 @@
 	)
 	tastes = list("donut" = 3, "fizzy tutti frutti" = 1,)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 //////////////////////JELLY DONUTS/////////////////////////
 
@@ -257,7 +247,6 @@
 	)
 	tastes = list("jelly" = 1, "donut" = 3, "violets" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/jelly/apple
 	name = "apple jelly donut"
@@ -300,7 +289,6 @@
 	)
 	tastes = list("jelly" = 1, "donut" = 4, "bitterness" = 1)
 	decorated_icon = "jelly_choc_sprinkles"
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/jelly/blumpkin
 	name = "blumpkin jelly donut"
@@ -315,7 +303,6 @@
 	)
 	tastes = list("jelly" = 1, "donut" = 2, "blumpkin" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/jelly/bungo
 	name = "bungo jelly donut"
@@ -356,7 +343,6 @@
 	)
 	tastes = list("jelly" = 3, "donut" = 1, "fizzy tutti frutti" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 //////////////////////////SLIME DONUTS/////////////////////////
 
@@ -393,7 +379,6 @@
 	)
 	tastes = list("jelly" = 1, "donut" = 3, "violets" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/jelly/slimejelly/apple
 	name = "apple jelly donut"
@@ -436,7 +421,6 @@
 	)
 	tastes = list("jelly" = 1, "donut" = 4, "bitterness" = 1)
 	decorated_icon = "jelly_choc_sprinkles"
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/jelly/slimejelly/blumpkin
 	name = "blumpkin jelly donut"
@@ -451,7 +435,6 @@
 	)
 	tastes = list("jelly" = 1, "donut" = 2, "blumpkin" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/donut/jelly/slimejelly/bungo
 	name = "bungo jelly donut"
@@ -492,6 +475,5 @@
 	)
 	tastes = list("jelly" = 3, "donut" = 1, "fizzy tutti frutti" = 1)
 	is_decorated = TRUE
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 #undef DONUT_SPRINKLE_CHANCE

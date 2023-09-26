@@ -22,7 +22,7 @@
 	desc = "It's a little piece of Eden."
 	icon_state = "apple"
 	foodtypes = FRUIT
-	juice_typepath = /datum/reagent/consumable/applejuice
+	juice_results = list(/datum/reagent/consumable/applejuice = 0)
 	tastes = list("apple" = 1)
 	distill_reagent = /datum/reagent/consumable/ethanol/hcider
 

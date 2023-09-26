@@ -1,5 +1,7 @@
 // zap needs to be over this amount to get power
-#define TESLA_COIL_THRESHOLD 32000
+#define TESLA_COIL_THRESHOLD 80
+// each zap power unit produces 400 joules
+#define ZAP_TO_ENERGY(p) (joules_to_energy((p) * 400))
 
 /obj/machinery/power/energy_accumulator/tesla_coil
 	name = "tesla coil"
@@ -105,7 +107,7 @@
 		power /= 10
 	zap_buckle_check(power)
 	var/power_removed = powernet ? power * input_power_multiplier : power
-	stored_energy += max(joules_to_energy(power_removed - TESLA_COIL_THRESHOLD), 0)
+	stored_energy += max(ZAP_TO_ENERGY(power_removed - TESLA_COIL_THRESHOLD), 0)
 	return max(power - power_removed, 0) //You get back the amount we didn't use
 
 /obj/machinery/power/energy_accumulator/tesla_coil/proc/zap()
@@ -168,9 +170,10 @@
 	if(anchored && !panel_open)
 		flick("grounding_rodhit", src)
 		zap_buckle_check(power)
-		stored_energy += joules_to_energy(power)
+		stored_energy += ZAP_TO_ENERGY(power)
 		return 0
 	else
 		. = ..()
 
 #undef TESLA_COIL_THRESHOLD
+#undef ZAP_TO_ENERGY

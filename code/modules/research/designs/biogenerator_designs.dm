@@ -3,7 +3,7 @@
 ///////////////////////////////////
 
 /datum/design/milk
-	name = "Synthetic Milk"
+	name = "Milk"
 	id = "milk"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.4)
@@ -11,7 +11,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/soymilk
-	name = "Synthetic Soy Milk"
+	name = "Soy Milk"
 	id = "soymilk"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.4)
@@ -19,7 +19,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/ethanol
-	name = "Synthetic Ethanol"
+	name = "Ethanol"
 	id = "ethanol"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.6)
@@ -27,7 +27,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/cream
-	name = "Synthetic Cream"
+	name = "Cream"
 	id = "cream"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.6)
@@ -35,7 +35,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/black_pepper
-	name = "Synthetic Black Pepper"
+	name = "Black Pepper"
 	id = "black_pepper"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.6)
@@ -43,7 +43,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/enzyme
-	name = "Synthetic Enzyme"
+	name = "Universal Enzyme"
 	id = "enzyme"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.6)
@@ -51,7 +51,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/flour
-	name = "Synthetic Flour"
+	name = "Flour"
 	id = "flour_sack"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.6)
@@ -59,7 +59,7 @@
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 
 /datum/design/sugar
-	name = "Synthetic Sugar"
+	name = "Sugar"
 	id = "sugar"
 	build_type = BIOGENERATOR
 	materials = list(/datum/material/biomass = 0.6)
@@ -70,7 +70,7 @@
 	name = "Monkey Cube"
 	id = "mcube"
 	build_type = BIOGENERATOR
-	materials = list(/datum/material/biomass = 50)
+	materials = list(/datum/material/biomass =SMALL_MATERIAL_AMOUNT*0.5)
 	build_path = /obj/item/food/monkeycube
 	category = list(RND_CATEGORY_INITIAL, RND_CATEGORY_BIO_FOOD)
 

@@ -298,18 +298,6 @@
 	icon_state = "scicrate"
 	base_icon_state = "scicrate"
 
-/obj/structure/closet/crate/mod
-	name = "MOD crate"
-	icon_state = "scicrate"
-	base_icon_state = "scicrate"
-
-/obj/structure/closet/crate/mod/PopulateContents()
-	..()
-	for(var/i in 1 to 3)
-		new /obj/item/mod/core/standard(src)
-	for(var/i in 1 to 2)
-		new /obj/item/clothing/neck/link_scryer/loaded(src)
-
 /obj/structure/closet/crate/solarpanel_small
 	name = "budget solar panel crate"
 	icon_state = "engi_e_crate"
@@ -352,6 +340,3 @@
 	. = ..()
 	for(var/i in 1 to 4)
 		new /obj/effect/spawner/random/decoration/generic(src)
-
-/obj/structure/closet/crate/add_to_roundstart_list()
-	return

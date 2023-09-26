@@ -36,8 +36,8 @@
 	if(!multitool_check_buffer(user, tool))
 		return
 	var/obj/item/multitool/multitool = tool
-	multitool.set_buffer(src)
-	balloon_alert(user, "saved to multitool buffer")
+	multitool.buffer = src
+	to_chat(user, span_notice("You save the data in the [multitool.name]'s buffer."))
 	return TRUE
 
 /obj/machinery/mechpad/wirecutter_act(mob/living/user, obj/item/tool)

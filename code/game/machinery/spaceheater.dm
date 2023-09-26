@@ -77,7 +77,7 @@
 
 /obj/machinery/space_heater/on_construction()
 	set_panel_open(TRUE)
-	QDEL_NULL(cell)
+	cell = null
 
 /obj/machinery/space_heater/on_deconstruction()
 	if(cell)

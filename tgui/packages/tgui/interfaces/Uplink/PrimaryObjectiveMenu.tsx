@@ -1,19 +1,16 @@
-import { useBackend } from '../../backend';
-import { Box, Button, Dimmer, Section, Stack } from '../../components';
+import { Box, Dimmer, Section, Stack } from '../../components';
 import { ObjectiveElement } from './ObjectiveMenu';
 
 type PrimaryObjectiveMenuProps = {
   primary_objectives;
   final_objective;
-  can_renegotiate;
 };
 
 export const PrimaryObjectiveMenu = (
   props: PrimaryObjectiveMenuProps,
   context
 ) => {
-  const { act } = useBackend(context);
-  const { primary_objectives, final_objective, can_renegotiate } = props;
+  const { primary_objectives, final_objective } = props;
   return (
     <Section fill>
       <Section>
@@ -80,17 +77,6 @@ export const PrimaryObjectiveMenu = (
           ))}
         </Stack>
       </Section>
-      {!!can_renegotiate && (
-        <Box mt={3} mb={5} bold fontSize={1.2} align="center" color="white">
-          <Button
-            content={'Renegotiate Contract'}
-            tooltip={
-              'Replace your existing primary objectives with a custom one. This action can only be performed once.'
-            }
-            onClick={() => act('renegotiate_objectives')}
-          />
-        </Box>
-      )}
     </Section>
   );
 };

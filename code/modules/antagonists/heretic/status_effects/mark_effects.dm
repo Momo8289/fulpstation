@@ -61,7 +61,8 @@
 	if(ishuman(owner))
 		var/mob/living/carbon/human/human_owner = owner
 		var/obj/item/bodypart/bodypart = pick(human_owner.bodyparts)
-		human_owner.cause_wound_of_type_and_severity(WOUND_SLASH, bodypart, WOUND_SEVERITY_SEVERE)
+		var/datum/wound/slash/severe/crit_wound = new()
+		crit_wound.apply_wound(bodypart)
 
 	return ..()
 
@@ -245,18 +246,4 @@
 	)
 	new teleport_effect(get_turf(owner))
 	owner.Paralyze(2 SECONDS)
-	return ..()
-
-// MARK OF KNOCK
-
-/datum/status_effect/eldritch/knock
-	effect_icon_state = "emark7"
-	duration = 10 SECONDS
-
-/datum/status_effect/eldritch/knock/on_apply()
-	. = ..()
-	ADD_TRAIT(owner, TRAIT_ALWAYS_NO_ACCESS, STATUS_EFFECT_TRAIT)
-
-/datum/status_effect/eldritch/knock/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_ALWAYS_NO_ACCESS, STATUS_EFFECT_TRAIT)
 	return ..()

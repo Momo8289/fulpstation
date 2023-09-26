@@ -3,9 +3,6 @@
 //Can hear deadchat, but are NOT normal ghosts and do NOT have x-ray vision
 //Admin-spawn or random event
 
-/// Source for a trait we get when we're stunned
-#define REVENANT_STUNNED_TRAIT "revenant_got_stunned"
-
 /mob/living/simple_animal/revenant
 	name = "revenant"
 	desc = "A malevolent spirit."
@@ -22,6 +19,7 @@
 	health = INFINITY //Revenants don't use health, they use essence instead
 	maxHealth = INFINITY
 	plane = GHOST_PLANE
+	healable = FALSE
 	sight = SEE_SELF
 	throwforce = 0
 
@@ -132,7 +130,6 @@
 /mob/living/simple_animal/revenant/Life(seconds_per_tick = SSMOBS_DT, times_fired)
 	if(stasis)
 		return
-	var/delta_time = DELTA_WORLD_TIME(SSmobs)
 	if(revealed && essence <= 0)
 		death()
 	if(unreveal_time && world.time >= unreveal_time)
@@ -143,10 +140,10 @@
 		to_chat(src, span_revenboldnotice("You are once more concealed."))
 	if(unstun_time && world.time >= unstun_time)
 		unstun_time = 0
-		REMOVE_TRAIT(src, TRAIT_NO_TRANSFORM, REVENANT_STUNNED_TRAIT)
+		notransform = FALSE
 		to_chat(src, span_revenboldnotice("You can move again!"))
 	if(essence_regenerating && !inhibited && essence < essence_regen_cap) //While inhibited, essence will not regenerate
-		essence = min(essence + (essence_regen_amount * delta_time), essence_regen_cap)
+		essence = min(essence + (essence_regen_amount * seconds_per_tick), essence_regen_cap)
 		update_mob_action_buttons() //because we update something required by our spells in life, we need to update our buttons
 	update_spooky_icon()
 	update_health_hud()
@@ -243,7 +240,7 @@
 		return
 	stasis = TRUE
 	to_chat(src, span_revendanger("NO! No... it's too late, you can feel your essence [pick("breaking apart", "drifting away")]..."))
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, REVENANT_STUNNED_TRAIT)
+	notransform = TRUE
 	revealed = TRUE
 	invisibility = 0
 	playsound(src, 'sound/effects/screech.ogg', 100, TRUE)
@@ -286,7 +283,7 @@
 		return
 	if(time <= 0)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, REVENANT_STUNNED_TRAIT)
+	notransform = TRUE
 	if(!unstun_time)
 		to_chat(src, span_revendanger("You cannot move!"))
 		unstun_time = world.time + time
@@ -298,7 +295,7 @@
 
 /mob/living/simple_animal/revenant/proc/update_spooky_icon()
 	if(revealed)
-		if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+		if(notransform)
 			if(draining)
 				icon_state = icon_drain
 			else
@@ -355,7 +352,7 @@
 /mob/living/simple_animal/revenant/proc/death_reset()
 	revealed = FALSE
 	unreveal_time = 0
-	REMOVE_TRAIT(src, TRAIT_NO_TRANSFORM, REVENANT_STUNNED_TRAIT)
+	notransform = 0
 	unstun_time = 0
 	inhibited = FALSE
 	draining = FALSE
@@ -545,4 +542,3 @@
 /datum/objective/revenant_fluff/check_completion()
 	return TRUE
 
-#undef REVENANT_STUNNED_TRAIT

@@ -27,7 +27,6 @@
 	var/vary_fire_sound = TRUE
 	var/fire_sound_volume = 50
 	var/dry_fire_sound = 'sound/weapons/gun/general/dry_fire.ogg'
-	var/dry_fire_sound_volume = 30
 	var/suppressed = null //whether or not a message is displayed when fired
 	var/can_suppress = FALSE
 	var/suppressed_sound = 'sound/weapons/gun/general/heavy_shot_suppressed.ogg'
@@ -50,9 +49,6 @@
 
 	/// Just 'slightly' snowflakey way to modify projectile damage for projectiles fired from this gun.
 	var/projectile_damage_multiplier = 1
-
-	/// Even snowflakier way to modify projectile wounding bonus/potential for projectiles fired from this gun.
-	var/projectile_wound_bonus = 0
 
 	var/spread = 0 //Spread induced by the gun itself.
 	var/randomspread = 1 //Set to 0 for shotguns. This is used for weapons that don't fire all their bullets at once.
@@ -111,19 +107,22 @@
 /obj/item/gun/proc/add_seclight_point()
 	return
 
-/obj/item/gun/Exited(atom/movable/gone, direction)
-	. = ..()
-	if(gone == pin)
+/obj/item/gun/handle_atom_del(atom/A)
+	if(A == pin)
 		pin = null
-	if(gone == chambered)
+	if(A == chambered)
 		chambered = null
 		update_appearance()
-	if(gone == suppressed)
+	if(A == suppressed)
 		clear_suppressor()
+	return ..()
+
+/obj/item/gun/Exited(atom/movable/gone, direction)
 	if(gone == bayonet)
 		bayonet = null
 		if(!QDELING(src))
 			update_appearance()
+	return ..()
 
 ///Clears var and updates icon. In the case of ballistic weapons, also updates the gun's weight.
 /obj/item/gun/proc/clear_suppressor()
@@ -169,7 +168,7 @@
 
 /obj/item/gun/proc/shoot_with_empty_chamber(mob/living/user as mob|obj)
 	balloon_alert_to_viewers("*click*")
-	playsound(src, dry_fire_sound, dry_fire_sound_volume, TRUE)
+	playsound(src, dry_fire_sound, 30, TRUE)
 
 /obj/item/gun/proc/fire_sounds()
 	if(suppressed)

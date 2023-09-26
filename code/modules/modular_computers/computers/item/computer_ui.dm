@@ -20,21 +20,15 @@
 			active_ui = new(user, src, "NtosMain")
 		return active_ui.open()
 
-	for (var/datum/tgui/window as anything in open_uis)
-		if(active_program)
-			window.interface = active_program.tgui_id
-			window.title = active_program.filedesc
-			active_program.ui_interact(user, window)
-		else
-			window.interface = "NtosMain"
-		window.send_assets()
-	update_static_data_for_all_viewers()
+	if(active_program)
+		active_ui.interface = active_program.tgui_id
+		active_ui.title = active_program.filedesc
+		active_program.ui_interact(user, active_ui)
+	else
+		active_ui.interface = "NtosMain"
 
-
-/obj/item/modular_computer/ui_state(mob/user)
-	if(inserted_pai && (user == inserted_pai.pai))
-		return GLOB.contained_state
-	return ..()
+	update_static_data(user, active_ui)
+	active_ui.send_assets()
 
 /obj/item/modular_computer/interact(mob/user)
 	if(enabled)
@@ -134,7 +128,7 @@
 
 	switch(action)
 		if("PC_exit")
-			active_program.kill_program(usr)
+			active_program.kill_program()
 			return TRUE
 		if("PC_shutdown")
 			shutdown_computer()
@@ -152,7 +146,7 @@
 			if(!istype(killed_program))
 				return
 
-			killed_program.kill_program(usr)
+			killed_program.kill_program()
 			to_chat(usr, span_notice("Program [killed_program.filename].[killed_program.filetype] with PID [rand(100,999)] has been killed."))
 			return TRUE
 
@@ -212,9 +206,10 @@
 		if("PC_Pai_Interact")
 			switch(params["option"])
 				if("eject")
-					if(!ishuman(usr))
-						return
-					remove_pai(usr)
+					usr.put_in_hands(inserted_pai)
+					to_chat(usr, span_notice("You remove [inserted_pai] from the [name]."))
+					inserted_pai = null
+					update_appearance(UPDATE_ICON)
 				if("interact")
 					inserted_pai.attack_self(usr)
 			return TRUE
@@ -226,8 +221,3 @@
 	if(physical)
 		return physical
 	return src
-
-/obj/item/modular_computer/ui_close(mob/user)
-	. = ..()
-	if(active_program)
-		active_program.ui_close(user)

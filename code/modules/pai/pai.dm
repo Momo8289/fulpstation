@@ -79,6 +79,10 @@
 	var/obj/item/instrument/piano_synth/instrument
 	/// Newscaster
 	var/obj/machinery/newscaster/pai/newscaster
+	/// PDA
+	var/atom/movable/screen/ai/modpc/pda_button
+	/// Photography module
+	var/obj/item/camera/siliconcam/pai_camera/camera
 	/// Remote signaler
 	var/obj/item/assembly/signaler/internal/signaler
 
@@ -111,7 +115,6 @@
 		"crow" = TRUE,
 		"duffel" = TRUE,
 		"fox" = FALSE,
-		"frog" = TRUE,
 		"hawk" = FALSE,
 		"lizard" = FALSE,
 		"monkey" = TRUE,
@@ -152,6 +155,7 @@
 
 /mob/living/silicon/pai/Destroy()
 	QDEL_NULL(atmos_analyzer)
+	QDEL_NULL(camera)
 	QDEL_NULL(hacking_cable)
 	QDEL_NULL(host_scan)
 	QDEL_NULL(instrument)
@@ -188,31 +192,29 @@
 	else
 		. += "Systems nonfunctional."
 
-/mob/living/silicon/pai/Exited(atom/movable/gone, direction)
-	if(gone == atmos_analyzer)
+/mob/living/silicon/pai/handle_atom_del(atom/deleting_atom)
+	if(deleting_atom == hacking_cable)
+		untrack_pai()
+		untrack_thing(hacking_cable)
+		hacking_cable = null
+		SStgui.update_user_uis(src)
+		if(!QDELETED(card))
+			card.update_appearance()
+	if(deleting_atom == atmos_analyzer)
 		atmos_analyzer = null
-	else if(gone == aicamera)
-		aicamera = null
-	else if(gone == host_scan)
+	if(deleting_atom == camera)
+		camera = null
+	if(deleting_atom == host_scan)
 		host_scan = null
-	else if(gone == internal_gps)
+	if(deleting_atom == internal_gps)
 		internal_gps = null
-	else if(gone == instrument)
+	if(deleting_atom == instrument)
 		instrument = null
-	else if(gone == newscaster)
+	if(deleting_atom == newscaster)
 		newscaster = null
-	else if(gone == signaler)
+	if(deleting_atom == signaler)
 		signaler = null
 	return ..()
-
-/mob/living/silicon/pai/proc/on_hacking_cable_del(atom/source)
-	SIGNAL_HANDLER
-	untrack_pai()
-	untrack_thing(hacking_cable)
-	hacking_cable = null
-	SStgui.update_user_uis(src)
-	if(!QDELETED(card))
-		card.update_appearance()
 
 /mob/living/silicon/pai/Initialize(mapload)
 	. = ..()

@@ -11,8 +11,8 @@
 	var/shaking = FALSE
 	var/on_cooldown = FALSE
 
-	var/shake_time = 5 SECONDS
-	var/cooldown_time = 10 SECONDS
+	var/shake_time = 50
+	var/cooldown_time = 100
 
 	var/static/list/possible_answers = list(
 		"It is certain",
@@ -42,16 +42,11 @@
 		return INITIALIZE_HINT_QDEL
 
 /obj/item/toy/eightball/proc/MakeHaunted()
-	if(prob(1))
+	. = prob(1)
+	if(.)
 		new /obj/item/toy/eightball/haunted(loc)
-		return TRUE
-	return FALSE
 
 /obj/item/toy/eightball/attack_self(mob/user)
-	if(..())
-		return
-
-	. = TRUE
 	if(shaking)
 		return
 
@@ -65,18 +60,22 @@
 
 	start_shaking(user)
 	if(do_after(user, shake_time))
-		say(get_answer())
+		var/answer = get_answer()
+		say(answer)
 
 		on_cooldown = TRUE
-		addtimer(VARSET_CALLBACK(src, on_cooldown, FALSE), cooldown_time)
+		addtimer(CALLBACK(src, PROC_REF(clear_cooldown)), cooldown_time)
 
 	shaking = FALSE
 
-/obj/item/toy/eightball/proc/start_shaking(mob/user)
+/obj/item/toy/eightball/proc/start_shaking(user)
 	return
 
 /obj/item/toy/eightball/proc/get_answer()
 	return pick(possible_answers)
+
+/obj/item/toy/eightball/proc/clear_cooldown()
+	on_cooldown = FALSE
 
 // A broken magic eightball, it only says "YOU SUCK" over and over again.
 
@@ -98,7 +97,7 @@
 /obj/item/toy/eightball/haunted
 	shake_time = 30 SECONDS
 	cooldown_time = 3 MINUTES
-	var/last_message = "Nothing!"
+	var/last_message
 	var/selected_message
 	//these kind of store the same thing but one is easier to work with.
 	var/list/votes = list()
@@ -161,7 +160,6 @@
 	notify_ghosts("[user] is shaking [src], hoping to get an answer to \"[selected_message]\"", source=src, enter_link="<a href=?src=[REF(src)];interact=1>(Click to help)</a>", action=NOTIFY_ATTACK, header = "Magic eightball")
 
 /obj/item/toy/eightball/haunted/Topic(href, href_list)
-	. = ..()
 	if(href_list["interact"])
 		if(isobserver(usr))
 			interact(usr)
@@ -171,7 +169,7 @@
 	var/top_vote
 
 	for(var/vote in votes)
-		var/amount_of_votes = votes[vote]
+		var/amount_of_votes = length(votes[vote])
 		if(amount_of_votes > top_amount)
 			top_vote = vote
 			top_amount = amount_of_votes
@@ -188,19 +186,12 @@
 
 	voted.Cut()
 
-	var/list/top_options = haunted_answers[top_vote]
-	return pick(top_options)
-
-// Only ghosts can interact because only ghosts can open the ui
-/obj/item/toy/eightball/haunted/can_interact(mob/living/user)
-	return isobserver(user)
+	return top_vote
 
 /obj/item/toy/eightball/haunted/ui_state(mob/user)
 	return GLOB.observer_state
 
 /obj/item/toy/eightball/haunted/ui_interact(mob/user, datum/tgui/ui)
-	if(!isobserver(user))
-		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "EightBallVote", name)
@@ -233,11 +224,9 @@
 			var/selected_answer = params["answer"]
 			if(!(selected_answer in haunted_answers))
 				return
-			var/oldvote = voted[user.ckey]
-			if(oldvote)
-				// detract their old vote
-				votes[oldvote] -= 1
-
-			votes[selected_answer] += 1
-			voted[user.ckey] = selected_answer
-			return TRUE
+			if(user.ckey in voted)
+				return
+			else
+				votes[selected_answer] += 1
+				voted[user.ckey] = selected_answer
+				. = TRUE

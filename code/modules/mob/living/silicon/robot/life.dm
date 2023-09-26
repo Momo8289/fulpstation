@@ -1,5 +1,5 @@
 /mob/living/silicon/robot/Life(seconds_per_tick = SSMOBS_DT, times_fired)
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (src.notransform)
 		return
 
 	..()

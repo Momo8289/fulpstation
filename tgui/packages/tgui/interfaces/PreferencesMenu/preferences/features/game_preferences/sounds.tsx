@@ -83,13 +83,3 @@ export const sound_elevator: FeatureToggle = {
   category: 'SOUND',
   component: CheckboxInput,
 };
-
-export const sound_achievement: FeatureChoiced = {
-  name: 'Achievement unlock sound',
-  category: 'SOUND',
-  description: multiline`
-    The sound that's played when unlocking an achievement.
-    If disabled, no sound will be played.
-  `,
-  component: FeatureDropdownInput,
-};

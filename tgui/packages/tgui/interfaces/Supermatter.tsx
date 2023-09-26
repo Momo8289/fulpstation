@@ -16,7 +16,6 @@ type SMGasMetadata = {
     numeric_data: {
       name: string;
       amount: number;
-      unit: string;
       positive: BooleanLike;
     }[];
   };
@@ -29,13 +28,9 @@ type SupermatterProps = {
   integrity: number;
   integrity_factors: { name: string; amount: number }[];
   internal_energy: number;
-  internal_energy_coefficient: number;
-  internal_energy_unit: string;
-  internal_energy_factors: { name: string; amount: number; unit: string }[];
-  zap_transmission: number;
-  zap_transmission_coefficient: number;
-  zap_transmission_unit: string;
-  zap_transmission_factors: { name: string; amount: number; unit: string }[];
+  internal_energy_factors: { name: string; amount: number }[];
+  zap_multiplier: number;
+  zap_multiplier_factors: { name: string; amount: number }[];
   temp_limit: number;
   temp_limit_factors: { name: string; amount: number }[];
   waste_multiplier: number;
@@ -97,13 +92,9 @@ export const SupermatterContent = (props: SupermatterProps, context) => {
     integrity,
     integrity_factors,
     internal_energy,
-    internal_energy_coefficient,
-    internal_energy_unit,
     internal_energy_factors,
-    zap_transmission,
-    zap_transmission_coefficient,
-    zap_transmission_unit,
-    zap_transmission_factors,
+    zap_multiplier,
+    zap_multiplier_factors,
     temp_limit,
     temp_limit_factors,
     waste_multiplier,
@@ -175,20 +166,19 @@ export const SupermatterContent = (props: SupermatterProps, context) => {
                     average: [5000, 7000],
                     bad: [7000, Infinity],
                   }}>
-                  {toFixed(internal_energy_coefficient, 3) +
-                    internal_energy_unit}
+                  {toFixed(internal_energy) + ' MeV/cm3'}
                 </ProgressBar>
               }
               detail={
                 !!internal_energy_factors.length && (
                   <LabeledList>
-                    {internal_energy_factors.map(({ name, amount, unit }) => (
+                    {internal_energy_factors.map(({ name, amount }) => (
                       <LabeledList.Item
                         key={name}
                         label={name + ' (∆)'}
                         labelWrap>
                         <Box color={amount > 0 ? 'green' : 'red'}>
-                          {toFixed(amount, 3) + unit}
+                          {toFixed(amount, 2) + ' MeV/cm3'}
                         </Box>
                       </LabeledList.Item>
                     ))}
@@ -197,30 +187,28 @@ export const SupermatterContent = (props: SupermatterProps, context) => {
               }
             />
             <SupermatterEntry
-              title="Zap Power Transmission"
+              title="Zap Power Multiplier"
               alwaysShowChevron
               content={
                 <ProgressBar
-                  value={zap_transmission}
+                  value={zap_multiplier}
                   minValue={0}
-                  maxValue={1e7}
+                  maxValue={5}
                   ranges={{
-                    teal: [1e7, Infinity],
-                    good: [2e6, 1e7],
-                    average: [1e6, 2e6],
-                    bad: [-Infinity, 1e6],
+                    good: [1.2, Infinity],
+                    average: [0.8, 1.2],
+                    bad: [-Infinity, 0.8],
                   }}>
-                  {toFixed(zap_transmission_coefficient, 2) +
-                    zap_transmission_unit}
+                  {toFixed(zap_multiplier, 2) + ' x'}
                 </ProgressBar>
               }
               detail={
-                !!zap_transmission_factors.length && (
+                !!zap_multiplier_factors.length && (
                   <LabeledList>
-                    {zap_transmission_factors.map(({ name, amount, unit }) => (
+                    {zap_multiplier_factors.map(({ name, amount }) => (
                       <LabeledList.Item key={name} label={name} labelWrap>
                         <Box color={amount > 0 ? 'green' : 'red'}>
-                          {toFixed(amount, 2) + unit}
+                          {toFixed(amount, 2) + ' x'}
                         </Box>
                       </LabeledList.Item>
                     ))}
@@ -368,8 +356,8 @@ export const SupermatterContent = (props: SupermatterProps, context) => {
                                           : 'red'
                                     }>
                                     {effect.amount > 0
-                                      ? '+' + effect.amount + effect.unit
-                                      : effect.amount + effect.unit}
+                                      ? '+' + effect.amount * 100 + '%'
+                                      : effect.amount * 100 + '%'}
                                   </LabeledList.Item>
                                 )
                             )}

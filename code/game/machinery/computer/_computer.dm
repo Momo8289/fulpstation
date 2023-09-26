@@ -26,6 +26,7 @@
 
 /obj/machinery/computer/Initialize(mapload, obj/item/circuitboard/C)
 	. = ..()
+
 	power_change()
 
 /obj/machinery/computer/process()

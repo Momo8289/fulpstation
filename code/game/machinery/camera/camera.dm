@@ -18,6 +18,7 @@
 	var/status = TRUE
 	var/start_active = FALSE //If it ignores the random chance to start broken on round start
 	var/invuln = null
+	var/obj/item/camera_bug/bug = null
 	var/datum/weakref/assembly_ref = null
 	var/area/myarea = null
 
@@ -30,6 +31,7 @@
 	var/busy = FALSE
 	var/emped = FALSE  //Number of consecutive EMP's on this camera
 	var/in_use_lights = 0
+
 	// Upgrades bitflag
 	var/upgrades = 0
 
@@ -103,10 +105,6 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		update_appearance()
 
 	alarm_manager = new(src)
-	find_and_hang_on_wall(directional = TRUE, \
-		custom_drop_callback = CALLBACK(src, PROC_REF(deconstruct), FALSE))
-
-	RegisterSignal(src, COMSIG_HIT_BY_SABOTEUR, PROC_REF(on_saboteur))
 
 /obj/machinery/camera/connect_to_shuttle(mapload, obj/docking_port/mobile/port, obj/docking_port/stationary/dock)
 	for(var/i in network)
@@ -131,6 +129,12 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		LAZYREMOVE(myarea.cameras, src)
 	QDEL_NULL(alarm_manager)
 	QDEL_NULL(assembly_ref)
+	if(bug)
+		bug.bugged_cameras -= c_tag
+		if(bug.current == src)
+			bug.current = null
+		bug = null
+
 	QDEL_NULL(last_shown_paper)
 	return ..()
 
@@ -158,7 +162,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		if(!status && powered())
 			. += span_info("It can reactivated with <b>wirecutters</b>.")
 
-/obj/machinery/camera/emp_act(severity, reset_time = 90 SECONDS)
+/obj/machinery/camera/emp_act(severity)
 	. = ..()
 	if(!status)
 		return
@@ -171,18 +175,13 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 			set_light(0)
 			emped = emped+1  //Increase the number of consecutive EMP's
 			update_appearance()
-			addtimer(CALLBACK(src, PROC_REF(post_emp_reset), emped, network), reset_time)
+			addtimer(CALLBACK(src, PROC_REF(post_emp_reset), emped, network), 90 SECONDS)
 			for(var/i in GLOB.player_list)
 				var/mob/M = i
 				if (M.client?.eye == src)
 					M.unset_machine()
 					M.reset_perspective(null)
 					to_chat(M, span_warning("The screen bursts into static!"))
-
-/obj/machinery/camera/proc/on_saboteur(datum/source, disrupt_duration)
-	SIGNAL_HANDLER
-	emp_act(EMP_LIGHT, reset_time = disrupt_duration)
-	return COMSIG_SABOTEUR_SUCCESS
 
 /obj/machinery/camera/proc/post_emp_reset(thisemp, previous_network)
 	if(QDELETED(src))
@@ -196,19 +195,12 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 	if(can_use())
 		GLOB.cameranet.addCamera(src)
 	emped = 0 //Resets the consecutive EMP count
-	addtimer(CALLBACK(src, PROC_REF(cancelCameraAlarm)), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(cancelCameraAlarm)), 100)
 
 /obj/machinery/camera/ex_act(severity, target)
 	if(invuln)
 		return FALSE
 	return ..()
-
-/obj/machinery/camera/attack_ai(mob/living/silicon/ai/user)
-	if (!istype(user))
-		return
-	if (!can_use())
-		return
-	user.switchCamera(src)
 
 /obj/machinery/camera/proc/setViewRange(num = 7)
 	src.view_range = num
@@ -421,6 +413,21 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 				log_paper("[key_name(user)] held [last_shown_paper] up to [src], and [key_name(potential_viewer)] may read it.")
 				potential_viewer.log_talk(item_name, LOG_VICTIM, tag="Pressed to camera from [key_name(user)]", log_globally=FALSE)
 				to_chat(potential_viewer, "[span_name(user)] holds <a href='?_src_=usr;show_paper_note=[REF(last_shown_paper)];'>\a [item_name]</a> up to your camera...")
+		return
+
+
+	if(istype(attacking_item, /obj/item/camera_bug))
+		if(!can_use())
+			to_chat(user, span_notice("Camera non-functional."))
+			return
+		if(bug)
+			to_chat(user, span_notice("Camera bug removed."))
+			bug.bugged_cameras -= src.c_tag
+			bug = null
+		else
+			to_chat(user, span_notice("Camera bugged."))
+			bug = attacking_item
+			bug.bugged_cameras[src.c_tag] = WEAKREF(src)
 		return
 
 	return ..()

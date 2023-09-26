@@ -11,7 +11,6 @@
 	tastes = list("ice cream" = 1)
 	foodtypes = GRAIN | DAIRY | SUGAR
 	food_flags = FOOD_FINGER_FOOD
-	crafting_complexity = FOOD_COMPLEXITY_2
 
 /obj/item/food/strawberryicecreamsandwich
 	name = "strawberry ice cream sandwich"
@@ -26,7 +25,6 @@
 	tastes = list("ice cream" = 2, "berry" = 2)
 	foodtypes = FRUIT | DAIRY | SUGAR
 	food_flags = FOOD_FINGER_FOOD
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 
 /obj/item/food/spacefreezy
@@ -42,11 +40,6 @@
 	)
 	tastes = list("blue cherries" = 2, "ice cream" = 2)
 	foodtypes = FRUIT | DAIRY | SUGAR
-	crafting_complexity = FOOD_COMPLEXITY_3
-
-/obj/item/food/spacefreezy/make_edible()
-	. = ..()
-	AddComponent(/datum/component/ice_cream_holder)
 
 /obj/item/food/spacefreezy/make_edible()
 	. = ..()
@@ -65,11 +58,6 @@
 	)
 	tastes = list("ice cream" = 1, "banana" = 1)
 	foodtypes = FRUIT | DAIRY | SUGAR
-	crafting_complexity = FOOD_COMPLEXITY_3
-
-/obj/item/food/sundae/make_edible()
-	. = ..()
-	AddComponent(/datum/component/ice_cream_holder, y_offset = -2, sweetener = /datum/reagent/consumable/caramel)
 
 /obj/item/food/sundae/make_edible()
 	. = ..()
@@ -88,11 +76,6 @@
 	)
 	tastes = list("ice cream" = 1, "banana" = 1, "a bad joke" = 1)
 	foodtypes = FRUIT | DAIRY | SUGAR
-	crafting_complexity = FOOD_COMPLEXITY_4
-
-/obj/item/food/honkdae/make_edible()
-	. = ..()
-	AddComponent(/datum/component/ice_cream_holder, y_offset = -2) //The sugar will react with the banana forming laughter. Honk!
 
 /obj/item/food/honkdae/make_edible()
 	. = ..()
@@ -115,7 +98,6 @@
 	tastes = list("ice" = 1, "water" = 1)
 	foodtypes = SUGAR //We use SUGAR as a base line to act in as junkfood, other wise we use fruit
 	food_flags = FOOD_FINGER_FOOD
-	crafting_complexity = FOOD_COMPLEXITY_2
 
 /obj/item/food/snowcones/lime
 	name = "lime snowcone"
@@ -311,7 +293,6 @@
 	)
 	tastes = list("ice" = 1, "water" = 1, "flowers" = 5, "sweetness" = 5, "wax" = 1)
 	foodtypes = SUGAR
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 /obj/item/food/snowcones/rainbow
 	name = "rainbow snowcone"
@@ -341,7 +322,6 @@
 	w_class = WEIGHT_CLASS_SMALL
 	foodtypes = DAIRY | SUGAR
 	food_flags = FOOD_FINGER_FOOD
-	crafting_complexity = FOOD_COMPLEXITY_3
 
 	var/overlay_state = "creamsicle_o" //This is the edible part of the popsicle.
 	var/bite_states = 4 //This value value is used for correctly setting the bite_consumption to ensure every bite changes the sprite. Do not set to zero.
@@ -388,7 +368,6 @@
 		/datum/reagent/consumable/sugar = 4,
 	)
 	foodtypes = FRUIT | DAIRY | SUGAR | ORANGES
-	crafting_complexity = FOOD_COMPLEXITY_4
 
 /obj/item/food/popsicle/creamsicle_berry
 	name = "berry creamsicle"
@@ -401,7 +380,6 @@
 	)
 	overlay_state = "creamsicle_m"
 	foodtypes = FRUIT | DAIRY | SUGAR
-	crafting_complexity = FOOD_COMPLEXITY_4
 
 /obj/item/food/popsicle/jumbo
 	name = "jumbo ice cream"
@@ -413,7 +391,6 @@
 		/datum/reagent/consumable/sugar = 2,
 	)
 	overlay_state = "jumbo"
-	crafting_complexity = FOOD_COMPLEXITY_4
 
 /obj/item/food/popsicle/licorice_creamsicle
 	name = "Void Bar™"
@@ -427,7 +404,6 @@
 	)
 	tastes = list("salty liquorice")
 	overlay_state = "licorice_creamsicle"
-	crafting_complexity = FOOD_COMPLEXITY_4
 
 /obj/item/food/cornuto
 	name = "cornuto"
@@ -445,4 +421,3 @@
 	tastes = list("chopped hazelnuts", "waffle")
 	foodtypes = DAIRY | SUGAR
 	venue_value = FOOD_PRICE_NORMAL
-	crafting_complexity = FOOD_COMPLEXITY_3

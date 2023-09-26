@@ -28,7 +28,7 @@
 	var/list/required_atoms
 	/// Paired with above. If set, the resulting spawned atoms upon ritual completion.
 	var/list/result_atoms = list()
-	/// Cost of knowledge in knowledge points
+	/// Cost of knowledge in knowlege points
 	var/cost = 0
 	/// The priority of the knowledge. Higher priority knowledge appear higher in the ritual list.
 	/// Number itself is completely arbitrary. Does not need to be set for non-ritual knowledge.
@@ -116,11 +116,11 @@
  * Called whenever the knowledge's associated ritual is completed successfully.
  *
  * Creates atoms from types in result_atoms.
- * Override this if you want something else to happen.
+ * Override this is you want something else to happen.
  * This CAN sleep, such as for summoning rituals which poll for ghosts.
  *
  * Arguments
- * * user - the mob who did the ritual
+ * * user - the mob who did the  ritual
  * * selected_atoms - an list of atoms chosen as a part of this ritual.
  * * loc - the turf the ritual's occuring on
  *
@@ -511,7 +511,7 @@
 	// Fade in the summon while the ghost poll is ongoing.
 	// Also don't let them mess with the summon while waiting
 	summoned.alpha = 0
-	ADD_TRAIT(summoned, TRAIT_NO_TRANSFORM, REF(src))
+	summoned.notransform = TRUE
 	summoned.move_resist = MOVE_FORCE_OVERPOWERING
 	animate(summoned, 10 SECONDS, alpha = 155)
 
@@ -526,7 +526,7 @@
 	var/mob/dead/observer/picked_candidate = pick(candidates)
 	// Ok let's make them an interactable mob now, since we got a ghost
 	summoned.alpha = 255
-	REMOVE_TRAIT(summoned, TRAIT_NO_TRANSFORM, REF(src))
+	summoned.notransform = FALSE
 	summoned.move_resist = initial(summoned.move_resist)
 
 	summoned.ghostize(FALSE)
@@ -636,7 +636,7 @@
 	to_chat(user, span_hypnophrase(span_big("[drain_message]")))
 	desc += " (Completed!)"
 	log_heretic_knowledge("[key_name(user)] completed a [name] at [worldtime2text()].")
-	user.add_mob_memory(/datum/memory/heretic_knowledge_ritual)
+	user.add_mob_memory(/datum/memory/heretic_knowlege_ritual)
 	return TRUE
 
 #undef KNOWLEDGE_RITUAL_POINTS

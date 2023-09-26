@@ -28,14 +28,6 @@
 		power_station = null
 	return ..()
 
-/obj/machinery/computer/teleporter/proc/check_for_disabled_beacon(datum/target)
-	if (!target)
-		return
-	if (target.weak_reference != target_ref)
-		return
-	turn_off()
-	set_teleport_target(null)
-
 /obj/machinery/computer/teleporter/proc/link_power_station()
 	if(power_station)
 		return
@@ -73,11 +65,6 @@
 
 	return data
 
-/obj/machinery/computer/teleporter/proc/turn_off()
-	power_station.engaged = FALSE
-	power_station.teleporter_hub.update_appearance()
-	power_station.teleporter_hub.calibrated = FALSE
-
 /obj/machinery/computer/teleporter/ui_act(action, params)
 	. = ..()
 	if(.)
@@ -92,11 +79,15 @@
 
 	switch(action)
 		if("regimeset")
-			turn_off()
+			power_station.engaged = FALSE
+			power_station.teleporter_hub.update_appearance()
+			power_station.teleporter_hub.calibrated = FALSE
 			reset_regime()
 			. = TRUE
 		if("settarget")
-			turn_off()
+			power_station.engaged = FALSE
+			power_station.teleporter_hub.update_appearance()
+			power_station.teleporter_hub.calibrated = FALSE
 			set_target(usr)
 			. = TRUE
 		if("calibrate")
@@ -114,18 +105,11 @@
 			return TRUE
 
 /obj/machinery/computer/teleporter/proc/set_teleport_target(new_target)
-	var/datum/old_target
 	var/datum/weakref/new_target_ref = WEAKREF(new_target)
 	if (target_ref == new_target_ref)
 		return
-	if (target_ref)
-		old_target = target_ref.resolve()
 	SEND_SIGNAL(src, COMSIG_TELEPORTER_NEW_TARGET, new_target)
 	target_ref = new_target_ref
-	if (istype(old_target, /obj/item/beacon))
-		UnregisterSignal(old_target, COMSIG_BEACON_DISABLED)
-	if (istype(new_target, /obj/item/beacon))
-		RegisterSignal(new_target, COMSIG_BEACON_DISABLED, PROC_REF(check_for_disabled_beacon))
 
 /obj/machinery/computer/teleporter/proc/finish_calibration()
 	calibrating = FALSE

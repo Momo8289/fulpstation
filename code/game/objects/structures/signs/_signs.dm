@@ -14,8 +14,6 @@
 	var/is_editable = FALSE
 	///sign_change_name is used to make nice looking, alphebetized and categorized names when you use a pen on any sign item or structure which is_editable.
 	var/sign_change_name
-	///Callback to the knock down proc for wallmounting behavior.
-	var/knock_down_callback
 
 /datum/armor/structure_sign
 	melee = 50
@@ -25,12 +23,6 @@
 /obj/structure/sign/Initialize(mapload)
 	. = ..()
 	register_context()
-	knock_down_callback = CALLBACK(src, PROC_REF(knock_down))
-	find_and_hang_on_wall(custom_drop_callback = knock_down_callback)
-
-/obj/structure/sign/Destroy()
-	. = ..()
-	knock_down_callback = null
 
 /obj/structure/sign/add_context(atom/source, list/context, obj/item/held_item, mob/user)
 	. = ..()
@@ -63,7 +55,18 @@
 	playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
 	user.visible_message(span_notice("[user] unfastens [src]."), \
 		span_notice("You unfasten [src]."))
-	knock_down(user)
+	var/obj/item/sign/unwrenched_sign = new (get_turf(user))
+	if(type != /obj/structure/sign/blank) //If it's still just a basic sign backing, we can (and should) skip some of the below variable transfers.
+		unwrenched_sign.name = name //Copy over the sign structure variables to the sign item we're creating when we unwrench a sign.
+		unwrenched_sign.desc = "[desc] It can be placed on a wall."
+		unwrenched_sign.icon = icon
+		unwrenched_sign.icon_state = icon_state
+		unwrenched_sign.sign_path = type
+		unwrenched_sign.set_custom_materials(custom_materials) //This is here so picture frames and wooden things don't get messed up.
+		unwrenched_sign.is_editable = is_editable
+	unwrenched_sign.update_integrity(get_integrity()) //Transfer how damaged it is.
+	unwrenched_sign.setDir(dir)
+	qdel(src) //The sign structure on the wall goes poof and only the sign item from unwrenching remains.
 	return TRUE
 
 /obj/structure/sign/welder_act(mob/living/user, obj/item/I)
@@ -111,29 +114,6 @@
 			span_notice("You finish changing the sign."))
 		return
 	return ..()
-
-/**
- * This is called when a sign is removed from a wall, either through deconstruction or being knocked down.
- * @param mob/living/user The user who removed the sign, if it was knocked down by a mob.
- */
-/obj/structure/sign/proc/knock_down(mob/living/user)
-	var/turf/drop_turf
-	if(user)
-		drop_turf = get_turf(user)
-	else
-		drop_turf = drop_location()
-	var/obj/item/sign/unwrenched_sign = new (drop_turf)
-	if(type != /obj/structure/sign/blank) //If it's still just a basic sign backing, we can (and should) skip some of the below variable transfers.
-		unwrenched_sign.name = name //Copy over the sign structure variables to the sign item we're creating when we unwrench a sign.
-		unwrenched_sign.desc = "[desc] It can be placed on a wall."
-		unwrenched_sign.icon = icon
-		unwrenched_sign.icon_state = icon_state
-		unwrenched_sign.sign_path = type
-		unwrenched_sign.set_custom_materials(custom_materials) //This is here so picture frames and wooden things don't get messed up.
-		unwrenched_sign.is_editable = is_editable
-	unwrenched_sign.update_integrity(get_integrity()) //Transfer how damaged it is.
-	unwrenched_sign.setDir(dir)
-	qdel(src) //The sign structure on the wall goes poof and only the sign item from unwrenching remains.
 
 /obj/structure/sign/blank //This subtype is necessary for now because some other things (posters, picture frames, paintings) inheret from the parent type.
 	icon_state = "backing"
@@ -231,7 +211,6 @@
 	playsound(target_turf, 'sound/items/deconstruct.ogg', 50, TRUE)
 	placed_sign.update_integrity(get_integrity())
 	placed_sign.setDir(dir)
-	placed_sign.find_and_hang_on_wall(TRUE, placed_sign.knock_down_callback)
 	qdel(src)
 
 /obj/item/sign/welder_act(mob/living/user, obj/item/I)

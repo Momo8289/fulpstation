@@ -7,8 +7,11 @@
 	if(!SPT_PROB(climb_chance, seconds_per_tick))
 		return
 
-	if(controller.blackboard_key_exists(BB_CLIMBED_TREE))
-		controller.queue_behavior(/datum/ai_behavior/climb_tree, BB_CLIMBED_TREE)
-		return SUBTREE_RETURN_FINISH_PLANNING
+	var/obj/structure/flora/tree/target = controller.blackboard[BB_CLIMBED_TREE]
 
-	controller.queue_behavior(/datum/ai_behavior/find_and_set/valid_tree, BB_CLIMBED_TREE, /obj/structure/flora/tree)
+	if(QDELETED(target))
+		controller.queue_behavior(/datum/ai_behavior/find_and_set/valid_tree, BB_CLIMBED_TREE, /obj/structure/flora/tree)
+		return
+
+	controller.queue_behavior(/datum/ai_behavior/climb_tree, BB_CLIMBED_TREE)
+	return SUBTREE_RETURN_FINISH_PLANNING

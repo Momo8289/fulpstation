@@ -216,8 +216,7 @@
 	else
 		researched_designs[design.id] = TRUE
 
-	for(var/list/datum/techweb_node/unlocked_nodes as anything in design.unlocked_by)
-		hidden_nodes -= unlocked_nodes
+	hidden_nodes -= design.id
 
 	return TRUE
 

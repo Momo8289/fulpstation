@@ -238,8 +238,9 @@
 	using = new /atom/movable/screen/pai/modpc(null, src)
 	using.screen_loc = ui_pai_mod_int
 	static_inventory += using
+	mypai.pda_button = using
 	var/atom/movable/screen/pai/modpc/tablet_button = using
-	tablet_button.pAI = mymob
+	tablet_button.pAI = mypai
 
 // Internal GPS
 	using = new /atom/movable/screen/pai/internal_gps(null, src)

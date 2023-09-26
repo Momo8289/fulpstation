@@ -65,8 +65,8 @@
 		if(!multitool_check_buffer(user, I))
 			return
 		var/obj/item/multitool/M = I
-		M.set_buffer(parent_turret)
-		balloon_alert(user, "saved to multitool buffer")
+		M.buffer = parent_turret
+		to_chat(user, span_notice("You add [parent_turret] to multitool buffer."))
 		return
 	return ..()
 

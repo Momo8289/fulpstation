@@ -22,12 +22,11 @@
 			Harvest(A)
 
 /mob/living/simple_animal/revenant/ranged_secondary_attack(atom/target, modifiers)
-	if(revealed || inhibited || HAS_TRAIT(src, TRAIT_NO_TRANSFORM) || !Adjacent(target) || !incorporeal_move_check(target))
+	if(revealed || notransform || inhibited || !Adjacent(target) || !incorporeal_move_check(target))
 		return
-
-	var/list/icon_dimensions = get_icon_dimensions(target.icon)
-	var/orbitsize = (icon_dimensions["width"] + icon_dimensions["height"]) * 0.5
-	orbitsize -= (orbitsize / world.icon_size) * (world.icon_size * 0.25)
+	var/icon/I = icon(target.icon,target.icon_state,target.dir)
+	var/orbitsize = (I.Width()+I.Height())*0.5
+	orbitsize -= (orbitsize/world.icon_size)*(world.icon_size*0.25)
 	orbit(target, orbitsize)
 
 //Harvest; activated by clicking the target, will try to drain their essence.
@@ -182,7 +181,11 @@
 	return TRUE
 
 /datum/action/cooldown/spell/aoe/revenant/get_things_to_cast_on(atom/center)
-	return RANGE_TURFS(aoe_radius, center)
+	var/list/things = list()
+	for(var/turf/nearby_turf in range(aoe_radius, center))
+		things += nearby_turf
+
+	return things
 
 /datum/action/cooldown/spell/aoe/revenant/before_cast(mob/living/simple_animal/revenant/cast_on)
 	. = ..()

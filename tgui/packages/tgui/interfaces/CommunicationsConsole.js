@@ -19,7 +19,7 @@ const EMAG_SHUTTLE_NOTICE =
 
 const sortShuttles = sortBy(
   (shuttle) => !shuttle.emagOnly,
-  (shuttle) => shuttle.initial_cost
+  (shuttle) => shuttle.creditCost
 );
 
 const AlertButton = (props, context) => {
@@ -193,14 +193,9 @@ const PageBuyingShuttle = (props, context) => {
             />
           }>
           <Box>{shuttle.description}</Box>
-          <Box color="teal" fontSize="10px" italic>
-            Occupancy Limit: {shuttle.occupancy_limit}
-          </Box>
-          <Box color="violet" fontSize="10px" bold>
-            {shuttle.prerequisites ? (
-              <b>Prerequisites: {shuttle.prerequisites}</b>
-            ) : null}
-          </Box>
+          {shuttle.prerequisites ? (
+            <b>Prerequisites: {shuttle.prerequisites}</b>
+          ) : null}
         </Section>
       ))}
     </Box>

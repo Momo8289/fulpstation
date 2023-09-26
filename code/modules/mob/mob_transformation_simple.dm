@@ -66,7 +66,6 @@
 	else
 		desired_mob.key = key
 
-	SEND_SIGNAL(src, COMSIG_MOB_CHANGED_TYPE)
 	if(delete_old_mob)
 		QDEL_IN(src, 1)
 	return desired_mob

@@ -14,6 +14,7 @@
 	var/greet_text
 	/// Type path for the associated job datum.
 	var/role_job = /datum/job/abductor_agent
+	var/datum/action/cooldown/spell/summonitem/abductor/baton_return_spell
 
 /datum/antagonist/abductor/get_preview_icon()
 	var/mob/living/carbon/human/dummy/consistent/scientist = new

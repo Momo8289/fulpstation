@@ -179,7 +179,7 @@
 
 /turf/open/openspace/icemoon/Initialize(mapload)
 	. = ..()
-	var/turf/T = GET_TURF_BELOW(src)
+	var/turf/T = below()
 	//I wonder if I should error here
 	if(!T)
 		return

@@ -125,7 +125,7 @@
 		if("Newscaster")
 			newscaster = new(src)
 		if("Photography Module")
-			aicamera = new /obj/item/camera/siliconcam/pai_camera(src)
+			camera = new(src)
 		if("Remote Signaler")
 			signaler = new(src)
 	return TRUE

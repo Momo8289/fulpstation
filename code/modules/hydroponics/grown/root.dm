@@ -22,7 +22,7 @@
 	icon_state = "carrot"
 	bite_consumption_mod = 2
 	foodtypes = VEGETABLES
-	juice_typepath = /datum/reagent/consumable/carrotjuice
+	juice_results = list(/datum/reagent/consumable/carrotjuice = 0)
 	wine_power = 30
 
 /obj/item/food/grown/carrot/attackby(obj/item/I, mob/user, params)
@@ -53,7 +53,7 @@
 	desc = "Closely related to carrots."
 	icon_state = "parsnip"
 	foodtypes = VEGETABLES
-	juice_typepath = /datum/reagent/consumable/parsnipjuice
+	juice_results = list(/datum/reagent/consumable/parsnipjuice = 0)
 	wine_power = 35
 
 

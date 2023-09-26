@@ -1,11 +1,7 @@
 #define TRANSFORMATION_DURATION 22
-/// Will be removed once the transformation is complete.
-#define TEMPORARY_TRANSFORMATION_TRAIT "temporary_transformation"
-/// Considered "permanent" since we'll be deleting the old mob and the client will be inserted into a new one (without this trait)
-#define PERMANENT_TRANSFORMATION_TRAIT "permanent_transformation"
 
 /mob/living/carbon/proc/monkeyize(instant = FALSE)
-	if (transformation_timer || HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform || transformation_timer)
 		return
 
 	if(ismonkey(src))
@@ -16,7 +12,7 @@
 		return
 
 	//Make mob invisible and spawn animation
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, TEMPORARY_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(TRANSFORMATION_DURATION, ignore_canstun = TRUE)
 	icon = null
 	cut_overlays()
@@ -27,8 +23,8 @@
 
 /mob/living/carbon/proc/finish_monkeyize()
 	transformation_timer = null
-	to_chat(src, span_boldnotice("You are now a monkey."))
-	REMOVE_TRAIT(src, TRAIT_NO_TRANSFORM, TEMPORARY_TRANSFORMATION_TRAIT)
+	to_chat(src, "<B>You are now a monkey.</B>")
+	notransform = FALSE
 	icon = initial(icon)
 	invisibility = 0
 	set_species(/datum/species/monkey)
@@ -43,7 +39,7 @@
 //Could probably be merged with monkeyize but other transformations got their own procs, too
 
 /mob/living/carbon/proc/humanize(species = /datum/species/human, instant = FALSE)
-	if (transformation_timer || HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform || transformation_timer)
 		return
 
 	if(!ismonkey(src))
@@ -54,7 +50,7 @@
 		return
 
 	//Make mob invisible and spawn animation
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, TEMPORARY_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(TRANSFORMATION_DURATION, ignore_canstun = TRUE)
 	icon = null
 	cut_overlays()
@@ -65,12 +61,13 @@
 
 /mob/living/carbon/proc/finish_humanize(species = /datum/species/human)
 	transformation_timer = null
-	to_chat(src, span_boldnotice("You are now a human."))
-	REMOVE_TRAIT(src, TRAIT_NO_TRANSFORM, TEMPORARY_TRANSFORMATION_TRAIT)
+	to_chat(src, "<B>You are now a human.</B>")
+	notransform = FALSE
 	icon = initial(icon)
 	invisibility = 0
 	set_species(species)
 	SEND_SIGNAL(src, COMSIG_MONKEY_HUMANIZE)
+	regenerate_icons()
 	return src
 
 /mob/proc/AIize(client/preference_source, move = TRUE)
@@ -110,9 +107,9 @@
 	qdel(src)
 
 /mob/living/carbon/AIize(client/preference_source, transfer_after = TRUE)
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(1, ignore_canstun = TRUE)
 	for(var/obj/item/W in src)
 		dropItemToGround(W)
@@ -122,7 +119,7 @@
 	return ..()
 
 /mob/living/carbon/human/AIize(client/preference_source, transfer_after = TRUE)
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform)
 		return
 	for(var/t in bodyparts)
 		qdel(t)
@@ -130,9 +127,9 @@
 	return ..()
 
 /mob/proc/Robotize(delete_items = 0, transfer_after = TRUE)
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if(notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	var/mob/living/silicon/robot/new_borg = new /mob/living/silicon/robot(loc)
 
 	new_borg.gender = gender
@@ -165,9 +162,9 @@
 	qdel(src)
 
 /mob/living/Robotize(delete_items = 0, transfer_after = TRUE)
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if(notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, TEMPORARY_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(1, ignore_canstun = TRUE)
 
 	for(var/obj/item/W in src)
@@ -179,7 +176,7 @@
 	icon = null
 	invisibility = INVISIBILITY_MAXIMUM
 
-	REMOVE_TRAIT(src, TRAIT_NO_TRANSFORM, TEMPORARY_TRANSFORMATION_TRAIT)
+	notransform = FALSE
 	return ..()
 
 /mob/living/silicon/robot/proc/replace_banned_cyborg()
@@ -194,9 +191,9 @@
 
 //human -> alien
 /mob/living/carbon/human/proc/Alienize()
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	add_traits(list(TRAIT_IMMOBILIZED, TRAIT_HANDS_BLOCKED), TRAIT_GENERIC)
 	for(var/obj/item/W in src)
 		dropItemToGround(W)
@@ -219,14 +216,14 @@
 	new_xeno.set_combat_mode(TRUE)
 	new_xeno.key = key
 
-	to_chat(new_xeno, span_boldnotice("You are now an alien."))
+	to_chat(new_xeno, "<B>You are now an alien.</B>")
+	. = new_xeno
 	qdel(src)
-	return new_xeno
 
 /mob/living/carbon/human/proc/slimeize(reproduce as num)
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	add_traits(list(TRAIT_IMMOBILIZED, TRAIT_HANDS_BLOCKED), TRAIT_GENERIC)
 	for(var/obj/item/W in src)
 		dropItemToGround(W)
@@ -251,9 +248,9 @@
 	new_slime.set_combat_mode(TRUE)
 	new_slime.key = key
 
-	to_chat(new_slime, span_boldnotice("You are now a slime. Skreee!"))
+	to_chat(new_slime, "<B>You are now a slime. Skreee!</B>")
+	. = new_slime
 	qdel(src)
-	return new_slime
 
 /mob/proc/become_overmind(starting_points = OVERMIND_STARTING_POINTS)
 	var/mob/camera/blob/B = new /mob/camera/blob(get_turf(src), starting_points)
@@ -263,9 +260,9 @@
 
 
 /mob/living/carbon/human/proc/corgize()
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if (notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(1, ignore_canstun = TRUE)
 	for(var/obj/item/W in src)
 		dropItemToGround(W)
@@ -279,19 +276,19 @@
 	new_corgi.set_combat_mode(TRUE)
 	new_corgi.key = key
 
-	to_chat(new_corgi, span_boldnotice("You are now a Corgi. Yap Yap!"))
+	to_chat(new_corgi, "<B>You are now a Corgi. Yap Yap!</B>")
+	. = new_corgi
 	qdel(src)
-	return new_corgi
 
 /mob/living/carbon/proc/gorillize()
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if(notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(1, ignore_canstun = TRUE)
 
 	SSblackbox.record_feedback("amount", "gorillas_created", 1)
 
-	var/Itemlist = get_equipped_items(include_pockets = TRUE)
+	var/Itemlist = get_equipped_items(TRUE)
 	Itemlist += held_items
 	for(var/obj/item/W in Itemlist)
 		dropItemToGround(W, TRUE)
@@ -305,9 +302,9 @@
 		mind.transfer_to(new_gorilla)
 	else
 		new_gorilla.key = key
-	to_chat(new_gorilla, span_boldnotice("You are now a gorilla. Ooga ooga!"))
+	to_chat(new_gorilla, "<B>You are now a gorilla. Ooga ooga!</B>")
+	. = new_gorilla
 	qdel(src)
-	return new_gorilla
 
 /mob/living/carbon/human/Animalize()
 
@@ -319,9 +316,9 @@
 		to_chat(usr, span_danger("Sorry but this mob type is currently unavailable."))
 		return
 
-	if(HAS_TRAIT(src, TRAIT_NO_TRANSFORM))
+	if(notransform)
 		return
-	ADD_TRAIT(src, TRAIT_NO_TRANSFORM, PERMANENT_TRANSFORMATION_TRAIT)
+	notransform = TRUE
 	Paralyze(1, ignore_canstun = TRUE)
 
 	for(var/obj/item/W in src)
@@ -340,8 +337,8 @@
 	new_mob.set_combat_mode(TRUE)
 
 	to_chat(new_mob, span_boldnotice("You suddenly feel more... animalistic."))
+	. = new_mob
 	qdel(src)
-	return new_mob
 
 /mob/proc/Animalize()
 
@@ -401,6 +398,4 @@
 	//Not in here? Must be untested!
 	return FALSE
 
-#undef PERMANENT_TRANSFORMATION_TRAIT
-#undef TEMPORARY_TRANSFORMATION_TRAIT
 #undef TRANSFORMATION_DURATION

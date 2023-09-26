@@ -83,10 +83,10 @@
 	var/turf/jaunt_turf = get_turf(blood)
 
 	// Begin the jaunt
-	ADD_TRAIT(jaunter, TRAIT_NO_TRANSFORM, REF(src))
+	jaunter.notransform = TRUE
 	var/obj/effect/dummy/phased_mob/holder = enter_jaunt(jaunter, jaunt_turf)
 	if(!holder)
-		REMOVE_TRAIT(jaunter, TRAIT_NO_TRANSFORM, REF(src))
+		jaunter.notransform = FALSE
 		return FALSE
 
 	RegisterSignal(holder, COMSIG_MOVABLE_MOVED, PROC_REF(update_status_on_signal))
@@ -104,7 +104,7 @@
 	playsound(jaunt_turf, 'sound/magic/enter_blood.ogg', 50, TRUE, -1)
 	jaunter.extinguish_mob()
 
-	REMOVE_TRAIT(jaunter, TRAIT_NO_TRANSFORM, REF(src))
+	jaunter.notransform = FALSE
 	return TRUE
 
 /**
@@ -113,7 +113,7 @@
  */
 /datum/action/cooldown/spell/jaunt/bloodcrawl/proc/try_exit_jaunt(obj/effect/decal/cleanable/blood, mob/living/jaunter, forced = FALSE)
 	if(!forced)
-		if(HAS_TRAIT(jaunter, TRAIT_NO_TRANSFORM))
+		if(jaunter.notransform)
 			to_chat(jaunter, span_warning("You cannot exit yet!!"))
 			return FALSE
 
@@ -196,9 +196,9 @@
 		blind_message = span_notice("You hear a splash."),
 	)
 
-	ADD_TRAIT(jaunter, TRAIT_NO_TRANSFORM, REF(src))
+	jaunter.notransform = TRUE
 	consume_victim(victim, jaunter)
-	REMOVE_TRAIT(jaunter, TRAIT_NO_TRANSFORM, REF(src))
+	jaunter.notransform = FALSE
 
 	return TRUE
 

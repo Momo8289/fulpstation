@@ -235,8 +235,7 @@ GLOBAL_LIST_EMPTY(dug_up_basalt)
 	turf_flags = CAN_BE_DIRTY_1 | IS_SOLID | NO_RUST | NO_RUINS
 
 /turf/open/misc/asteroid/snow/icemoon/do_not_scrape
-	flags_1 = CAN_BE_DIRTY_1
-	turf_flags = IS_SOLID | NO_RUST | NO_CLEARING
+	turf_flags = CAN_BE_DIRTY_1 | IS_SOLID | NO_RUST | NO_CLEARING
 
 /turf/open/lava/plasma/ice_moon
 	initial_gas_mix = ICEMOON_DEFAULT_ATMOS

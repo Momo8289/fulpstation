@@ -28,7 +28,7 @@
 /datum/status_effect/limp
 	id = "limp"
 	status_type = STATUS_EFFECT_REPLACE
-	tick_interval = -1
+	tick_interval = 0
 	alert_type = /atom/movable/screen/alert/status_effect/limp
 	var/msg_stage = 0//so you dont get the most intense messages immediately
 	/// The left leg of the limping person
@@ -54,11 +54,11 @@
 	right = C.get_bodypart(BODY_ZONE_R_LEG)
 	update_limp()
 	RegisterSignal(C, COMSIG_MOVABLE_MOVED, PROC_REF(check_step))
-	RegisterSignals(C, list(COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_POST_LOSE_WOUND, COMSIG_CARBON_ATTACH_LIMB, COMSIG_CARBON_REMOVE_LIMB), PROC_REF(update_limp))
+	RegisterSignals(C, list(COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_LOSE_WOUND, COMSIG_CARBON_ATTACH_LIMB, COMSIG_CARBON_REMOVE_LIMB), PROC_REF(update_limp))
 	return TRUE
 
 /datum/status_effect/limp/on_remove()
-	UnregisterSignal(owner, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_POST_LOSE_WOUND, COMSIG_CARBON_ATTACH_LIMB, COMSIG_CARBON_REMOVE_LIMB))
+	UnregisterSignal(owner, list(COMSIG_MOVABLE_MOVED, COMSIG_CARBON_GAIN_WOUND, COMSIG_CARBON_LOSE_WOUND, COMSIG_CARBON_ATTACH_LIMB, COMSIG_CARBON_REMOVE_LIMB))
 
 /atom/movable/screen/alert/status_effect/limp
 	name = "Limping"
@@ -165,41 +165,51 @@
 	if(W == linked_wound)
 		qdel(src)
 
-/datum/status_effect/wound/nextmove_modifier()
-	var/mob/living/carbon/C = owner
-
-	if(C.get_active_hand() == linked_limb)
-		return linked_wound.get_action_delay_mult()
-
-	return ..()
-
-/datum/status_effect/wound/nextmove_adjust()
-	var/mob/living/carbon/C = owner
-
-	if(C.get_active_hand() == linked_limb)
-		return linked_wound.get_action_delay_increment()
-
-	return ..()
-
 
 // bones
-/datum/status_effect/wound/blunt/bone
+/datum/status_effect/wound/blunt
+
+/datum/status_effect/wound/blunt/on_apply()
+	. = ..()
+	RegisterSignal(owner, COMSIG_MOB_SWAP_HANDS, PROC_REF(on_swap_hands))
+	on_swap_hands()
+
+/datum/status_effect/wound/blunt/on_remove()
+	. = ..()
+	UnregisterSignal(owner, COMSIG_MOB_SWAP_HANDS)
+	var/mob/living/carbon/wound_owner = owner
+	wound_owner.remove_actionspeed_modifier(/datum/actionspeed_modifier/blunt_wound)
+
+/datum/status_effect/wound/blunt/proc/on_swap_hands()
+	SIGNAL_HANDLER
+
+	var/mob/living/carbon/wound_owner = owner
+	if(wound_owner.get_active_hand() == linked_limb)
+		wound_owner.add_actionspeed_modifier(/datum/actionspeed_modifier/blunt_wound, (linked_wound.interaction_efficiency_penalty - 1))
+	else
+		wound_owner.remove_actionspeed_modifier(/datum/actionspeed_modifier/blunt_wound)
+
+/datum/status_effect/wound/blunt/nextmove_modifier()
+	var/mob/living/carbon/C = owner
+
+	if(C.get_active_hand() == linked_limb)
+		return linked_wound.interaction_efficiency_penalty
+
+	return 1
 
 // blunt
-/datum/status_effect/wound/blunt/bone/moderate
+/datum/status_effect/wound/blunt/moderate
 	id = "disjoint"
-/datum/status_effect/wound/blunt/bone/severe
+/datum/status_effect/wound/blunt/severe
 	id = "hairline"
-/datum/status_effect/wound/blunt/bone/critical
+/datum/status_effect/wound/blunt/critical
 	id = "compound"
-
 // slash
-
-/datum/status_effect/wound/slash/flesh/moderate
+/datum/status_effect/wound/slash/moderate
 	id = "abrasion"
-/datum/status_effect/wound/slash/flesh/severe
+/datum/status_effect/wound/slash/severe
 	id = "laceration"
-/datum/status_effect/wound/slash/flesh/critical
+/datum/status_effect/wound/slash/critical
 	id = "avulsion"
 // pierce
 /datum/status_effect/wound/pierce/moderate
@@ -209,9 +219,9 @@
 /datum/status_effect/wound/pierce/critical
 	id = "rupture"
 // burns
-/datum/status_effect/wound/burn/flesh/moderate
+/datum/status_effect/wound/burn/moderate
 	id = "seconddeg"
-/datum/status_effect/wound/burn/flesh/severe
+/datum/status_effect/wound/burn/severe
 	id = "thirddeg"
-/datum/status_effect/wound/burn/flesh/critical
+/datum/status_effect/wound/burn/critical
 	id = "fourthdeg"

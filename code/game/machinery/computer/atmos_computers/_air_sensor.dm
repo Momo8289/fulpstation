@@ -91,28 +91,28 @@
 	if(istype(multi_tool.buffer, /obj/machinery/atmospherics/components/unary/outlet_injector))
 		var/obj/machinery/atmospherics/components/unary/outlet_injector/input = multi_tool.buffer
 		inlet_id = input.id_tag
-		multi_tool.set_buffer(src)
+		multi_tool.buffer = null
 		balloon_alert(user, "connected to input")
 
 	else if(istype(multi_tool.buffer, /obj/machinery/atmospherics/components/unary/vent_pump))
 		var/obj/machinery/atmospherics/components/unary/vent_pump/output = multi_tool.buffer
 		//so its no longer controlled by air alarm
 		output.disconnect_from_area()
-		//configuration copied from /obj/machinery/atmospherics/components/unary/vent_pump/siphon but with max pressure
+		//configuration copied from /obj/machinery/atmospherics/components/unary/vent_pump/siphon
 		output.pump_direction = ATMOS_DIRECTION_SIPHONING
 		output.pressure_checks = ATMOS_INTERNAL_BOUND
-		output.internal_pressure_bound = MAX_OUTPUT_PRESSURE
+		output.internal_pressure_bound = 4000
 		output.external_pressure_bound = 0
 		//finally assign it to this sensor
 		outlet_id = output.id_tag
-		multi_tool.set_buffer(src)
+		multi_tool.buffer = null
 		balloon_alert(user, "connected to output")
 
 	else
-		multi_tool.set_buffer(src)
-		balloon_alert(user, "sensor added to buffer")
+		multi_tool.buffer = src
+		balloon_alert(user, "added to multitool buffer")
 
-	return TOOL_ACT_TOOLTYPE_SUCCESS
+	return TRUE
 
 /**
  * A portable version of the /obj/machinery/air_sensor

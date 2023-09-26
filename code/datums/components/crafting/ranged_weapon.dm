@@ -45,12 +45,14 @@
 
 /datum/crafting_recipe/advancedegun
 	name = "Advanced Energy Gun"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/e_gun/nuclear
 	reqs = list(
 		/obj/item/gun/energy/e_gun = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/nuclear = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/advancedegun/New()
@@ -59,12 +61,14 @@
 
 /datum/crafting_recipe/tempgun
 	name = "Temperature Gun"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/temperature
 	reqs = list(
-		/obj/item/gun/energy/disabler = 1,
+		/obj/item/gun/energy/e_gun = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/temperature = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/tempgun/New()
@@ -73,14 +77,16 @@
 
 /datum/crafting_recipe/beam_rifle
 	name = "Particle Acceleration Rifle"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/beam_rifle
 	reqs = list(
 		/obj/item/gun/energy/e_gun = 1,
 		/obj/item/assembly/signaler/anomaly/flux = 1,
 		/obj/item/assembly/signaler/anomaly/grav = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/beam_rifle = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/beam_rifle/New()
@@ -89,23 +95,27 @@
 
 /datum/crafting_recipe/ebow
 	name = "Energy Crossbow"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/recharge/ebow/large
 	reqs = list(
 		/obj/item/gun/energy/recharge/kinetic_accelerator = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/ebow = 1,
 		/datum/reagent/uranium/radium = 15,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/xraylaser
 	name = "X-ray Laser Gun"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/xray
 	reqs = list(
 		/obj/item/gun/energy/laser = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/xray = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/xraylaser/New()
@@ -114,12 +124,14 @@
 
 /datum/crafting_recipe/hellgun
 	name = "Hellfire Laser Gun"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/laser/hellgun
 	reqs = list(
 		/obj/item/gun/energy/laser = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/hellgun = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/hellgun/New()
@@ -128,12 +140,14 @@
 
 /datum/crafting_recipe/ioncarbine
 	name = "Ion Carbine"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/ionrifle/carbine
 	reqs = list(
 		/obj/item/gun/energy/laser = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/ion = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/ioncarbine/New()
@@ -142,14 +156,16 @@
 
 /datum/crafting_recipe/decloner
 	name = "Biological Demolecularisor"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/decloner
 	reqs = list(
 		/obj/item/gun/energy/laser = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/decloner = 1,
 		/datum/reagent/baldium = 30,
 		/datum/reagent/toxin/mutagen = 4,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/decloner/New()
@@ -158,12 +174,14 @@
 
 /datum/crafting_recipe/teslacannon
 	name = "Tesla Cannon"
+	tool_behaviors = list(TOOL_SCREWDRIVER, TOOL_WIRECUTTER)
 	result = /obj/item/gun/energy/tesla_cannon
 	reqs = list(
 		/obj/item/assembly/signaler/anomaly/flux = 1,
+		/obj/item/stack/cable_coil = 5,
 		/obj/item/weaponcrafting/gunkit/tesla = 1,
 	)
-	time = 10 SECONDS
+	time = 20 SECONDS
 	category = CAT_WEAPON_RANGED
 
 /datum/crafting_recipe/improvised_pneumatic_cannon //Pretty easy to obtain but

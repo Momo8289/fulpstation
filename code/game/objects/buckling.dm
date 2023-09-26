@@ -197,10 +197,10 @@
 
 //Handle any extras after buckling
 //Called on buckle_mob()
-/atom/movable/proc/post_buckle_mob(mob/living/buckled_mob)
+/atom/movable/proc/post_buckle_mob(mob/living/M)
 
 //same but for unbuckle
-/atom/movable/proc/post_unbuckle_mob(mob/living/unbuckled_mob)
+/atom/movable/proc/post_unbuckle_mob(mob/living/M)
 
 /**
  * Simple helper proc that runs a suite of checks to test whether it is possible or not to buckle the target mob to src.

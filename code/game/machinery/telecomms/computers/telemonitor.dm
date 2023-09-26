@@ -98,32 +98,6 @@
 			screen = MAIN_VIEW
 			return TRUE
 	return TRUE
-
-			for(var/obj/machinery/telecomms/T in urange(25, src))
-				if(T.network == network)
-					machinelist.Add(T)
-			if(machinelist.len == 0)
-				error_message = "OPERATION FAILED: UNABLE TO LOCATE NETWORK ENTITIES IN  [network]."
-				return TRUE
-			error_message = "[machinelist.len] ENTITIES LOCATED & BUFFERED";
-			return TRUE
-		if("flush_buffer")
-			machinelist = list()
-			network = ""
-			return TRUE
-		if("view_machine")
-			for(var/obj/machinery/telecomms/T in machinelist)
-				if(T.id == params["id"])
-					SelectedMachine = T
-			if(!SelectedMachine)
-				error_message = "OPERATION FAILED: UNABLE TO LOCATE MACHINERY."
-			screen = MACHINE_VIEW
-			return TRUE
-		if("return_home")
-			SelectedMachine = null
-			screen = MAIN_VIEW
-			return TRUE
-	return TRUE
 /obj/machinery/computer/telecomms/monitor/attackby()
 	. = ..()
 	updateUsrDialog()

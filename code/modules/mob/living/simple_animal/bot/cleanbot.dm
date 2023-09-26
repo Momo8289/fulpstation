@@ -92,7 +92,7 @@
 	)
 
 /mob/living/simple_animal/bot/cleanbot/autopatrol
-	bot_mode_flags = BOT_MODE_ON | BOT_MODE_AUTOPATROL | BOT_MODE_REMOTE_ENABLED | BOT_MODE_CAN_BE_SAPIENT | BOT_MODE_ROUNDSTART_POSSESSION
+	bot_mode_flags = BOT_MODE_ON | BOT_MODE_AUTOPATROL | BOT_MODE_REMOTE_ENABLED | BOT_MODE_CAN_BE_SAPIENT
 
 /mob/living/simple_animal/bot/cleanbot/medbay
 	name = "Scrubs, MD"
@@ -128,12 +128,10 @@
 	return ..()
 
 /mob/living/simple_animal/bot/cleanbot/Exited(atom/movable/gone, direction)
-	. = ..()
 	if(gone == build_bucket)
 		build_bucket = null
-	if(gone == weapon)
-		weapon = null
-		update_appearance(UPDATE_ICON)
+	return ..()
+
 
 /mob/living/simple_animal/bot/cleanbot/Destroy()
 	QDEL_NULL(build_bucket)
@@ -249,6 +247,12 @@
 		return scan_carbon
 	if(is_type_in_typecache(scan_target, target_types))
 		return scan_target
+
+/mob/living/simple_animal/bot/cleanbot/handle_atom_del(atom/deleting_atom)
+	if(deleting_atom == weapon)
+		weapon = null
+		update_appearance(UPDATE_ICON)
+	return ..()
 
 /mob/living/simple_animal/bot/cleanbot/handle_automated_action()
 	. = ..()

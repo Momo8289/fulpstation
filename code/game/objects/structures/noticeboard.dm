@@ -1,10 +1,10 @@
-#define MAX_NOTICES 8
+#define MAX_NOTICES 5
 
 /obj/structure/noticeboard
 	name = "notice board"
-	desc = "A board for pinning important notices upon. It is made of the finest Spanish cork."
+	desc = "A board for pinning important notices upon."
 	icon = 'icons/obj/wallmounts.dmi'
-	icon_state = "noticeboard"
+	icon_state = "nboard00"
 	density = FALSE
 	anchored = TRUE
 	max_integrity = 150
@@ -25,8 +25,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/noticeboard, 32)
 		if(istype(I, /obj/item/paper))
 			I.forceMove(src)
 			notices++
-	update_appearance(UPDATE_ICON)
-	find_and_hang_on_wall()
+	icon_state = "nboard0[notices]"
 
 //attaching papers!!
 /obj/structure/noticeboard/attackby(obj/item/O, mob/user, params)
@@ -38,7 +37,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/noticeboard, 32)
 			if(!user.transferItemToLoc(O, src))
 				return
 			notices++
-			update_appearance(UPDATE_ICON)
+			icon_state = "nboard0[notices]"
 			to_chat(user, span_notice("You pin the [O] to the noticeboard."))
 		else
 			to_chat(user, span_warning("The notice board is full!"))
@@ -90,11 +89,6 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/noticeboard, 32)
 			remove_item(item, user)
 			return TRUE
 
-/obj/structure/noticeboard/update_overlays()
-	. = ..()
-	if(notices)
-		. += "notices_[notices]"
-
 /**
  * Removes an item from the notice board
  *
@@ -108,7 +102,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/noticeboard, 32)
 		user.put_in_hands(item)
 		balloon_alert(user, "removed from board")
 	notices--
-	update_appearance(UPDATE_ICON)
+	icon_state = "nboard0[notices]"
 
 /obj/structure/noticeboard/deconstruct(disassembled = TRUE)
 	if(!(flags_1 & NODECONSTRUCT_1))
@@ -124,7 +118,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/noticeboard, 32)
 	name = "notice board"
 	desc = "Right now it's more of a clipboard. Attach to a wall to use."
 	icon = 'icons/obj/wallmounts.dmi'
-	icon_state = "noticeboard"
+	icon_state = "nboard00"
 	custom_materials = list(
 		/datum/material/wood = SHEET_MATERIAL_AMOUNT,
 	)

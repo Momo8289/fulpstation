@@ -176,7 +176,6 @@
 	job_rank = ROLE_REV_HEAD
 
 	preview_outfit = /datum/outfit/revolutionary
-	hardcore_random_bonus = TRUE
 
 	var/remove_clumsy = FALSE
 	var/give_flash = FALSE
@@ -475,7 +474,8 @@
 	for(var/datum/mind/rev_mind in get_head_revolutionaries())
 		var/turf/rev_turf = get_turf(rev_mind.current)
 		if(!considered_afk(rev_mind) && considered_alive(rev_mind) && is_station_level(rev_turf.z))
-			return FALSE
+			if(ishuman(rev_mind.current))
+				return FALSE
 	return TRUE
 
 /// Updates the state of the world depending on if revs won or loss.

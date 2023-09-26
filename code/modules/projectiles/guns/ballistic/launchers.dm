@@ -89,13 +89,13 @@
 	user.visible_message(span_warning("[user] aims [src] at the ground! It looks like [user.p_theyre()] performing a sick rocket jump!"), \
 		span_userdanger("You aim [src] at the ground to perform a bisnasty rocket jump..."))
 	if(can_shoot())
-		ADD_TRAIT(user, TRAIT_NO_TRANSFORM, REF(src))
+		user.notransform = TRUE
 		playsound(src, 'sound/vehicles/rocketlaunch.ogg', 80, TRUE, 5)
 		animate(user, pixel_z = 300, time = 30, easing = LINEAR_EASING)
 		sleep(7 SECONDS)
 		animate(user, pixel_z = 0, time = 5, easing = LINEAR_EASING)
 		sleep(0.5 SECONDS)
-		REMOVE_TRAIT(user, TRAIT_NO_TRANSFORM, REF(src))
+		user.notransform = FALSE
 		process_fire(user, user, TRUE)
 		if(!QDELETED(user)) //if they weren't gibbed by the explosion, take care of them for good.
 			user.gib()

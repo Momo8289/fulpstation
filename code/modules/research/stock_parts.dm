@@ -100,46 +100,22 @@ If you create T5+ please take a pass at mech_fabricator.dm. The parts being good
  */
 /obj/item/storage/part_replacer/bluespace/proc/on_part_entered(datum/source, obj/item/inserted_component)
 	SIGNAL_HANDLER
-
-	if(istype(inserted_component, /obj/item/stock_parts/cell))
-		var/obj/item/stock_parts/cell/inserted_cell = inserted_component
-		if(inserted_cell.rigged || inserted_cell.corrupted)
-			message_admins("[ADMIN_LOOKUPFLW(usr)] has inserted rigged/corrupted [inserted_cell] into [src].")
-			usr.log_message("has inserted rigged/corrupted [inserted_cell] into [src].", LOG_GAME)
-			usr.log_message("inserted rigged/corrupted [inserted_cell] into [src]", LOG_ATTACK)
-		return
-
 	if(inserted_component.reagents)
 		if(length(inserted_component.reagents.reagent_list))
 			inserted_component.reagents.clear_reagents()
 			to_chat(usr, span_notice("[src] churns as [inserted_component] has its reagents emptied into bluespace."))
 		RegisterSignal(inserted_component.reagents, COMSIG_REAGENTS_PRE_ADD_REAGENT, PROC_REF(on_insered_component_reagent_pre_add))
 
-/**
- * Signal handler for when the reagents datum of an inserted part has reagents added to it.
- *
- * Registers the PRE_ADD variant which allows the signal handler to stop reagents being
- * added.
- *
- * Simply returns COMPONENT_CANCEL_REAGENT_ADD. We never want to allow people to add
- * reagents to beakers in BRPEDs as they can then be used for spammable remote bombing.
- */
-/obj/item/storage/part_replacer/bluespace/proc/on_insered_component_reagent_pre_add(datum/source, reagent, amount, reagtemp, data, no_react)
-	SIGNAL_HANDLER
 
-	return COMPONENT_CANCEL_REAGENT_ADD
+	if(!istype(inserted_component, /obj/item/stock_parts/cell))
+		return
 
-/**
- * Signal handler for a part is removed from the BRPED.
- *
- * Does signal registration cleanup on its reagents, if it has any.
- */
-/obj/item/storage/part_replacer/bluespace/proc/on_part_exited(datum/source, obj/item/removed_component)
-	SIGNAL_HANDLER
+	var/obj/item/stock_parts/cell/inserted_cell = inserted_component
 
-	if(removed_component.reagents)
-		UnregisterSignal(removed_component.reagents, COMSIG_REAGENTS_PRE_ADD_REAGENT)
-
+	if(inserted_cell.rigged || inserted_cell.corrupted)
+		message_admins("[ADMIN_LOOKUPFLW(usr)] has inserted rigged/corrupted [inserted_cell] into [src].")
+		usr.log_message("has inserted rigged/corrupted [inserted_cell] into [src].", LOG_GAME)
+		usr.log_message("inserted rigged/corrupted [inserted_cell] into [src]", LOG_ATTACK)
 
 /**
  * Signal handler for when the reagents datum of an inserted part has reagents added to it.

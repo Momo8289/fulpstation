@@ -30,7 +30,6 @@
 		/datum/reagent/consumable/nutriment/vitamin = 2,
 	)
 	foodtypes = SUGAR | DAIRY
-	crafting_complexity = FOOD_COMPLEXITY_2
 
 /obj/item/food/bowled/spacylibertyduff
 	name = "spacy liberty duff"
@@ -44,7 +43,6 @@
 	)
 	tastes = list("jelly" = 1, "mushroom" = 1)
 	foodtypes = VEGETABLES
-	crafting_complexity = FOOD_COMPLEXITY_2
 
 /obj/item/food/bowled/amanitajelly
 	name = "amanita jelly"
@@ -59,4 +57,3 @@
 	)
 	tastes = list("jelly" = 1, "mushroom" = 1)
 	foodtypes = VEGETABLES | TOXIC
-	crafting_complexity = FOOD_COMPLEXITY_2

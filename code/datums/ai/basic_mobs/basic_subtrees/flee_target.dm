@@ -9,7 +9,10 @@
 
 /datum/ai_planning_subtree/flee_target/SelectBehaviors(datum/ai_controller/controller, seconds_per_tick)
 	. = ..()
-	if (!controller.blackboard[BB_BASIC_MOB_FLEEING] || !controller.blackboard_key_exists(target_key))
+	if (!controller.blackboard[BB_BASIC_MOB_FLEEING])
+		return
+	var/atom/target = controller.blackboard[target_key]
+	if(QDELETED(target))
 		return
 	controller.queue_behavior(flee_behaviour, target_key, hiding_place_key)
 	return SUBTREE_RETURN_FINISH_PLANNING //we gotta get out of here.

@@ -6,6 +6,7 @@
 	icon_state = "arctic_lobstrosity"
 	icon_living = "arctic_lobstrosity"
 	icon_dead = "arctic_lobstrosity_dead"
+	mob_biotypes = MOB_ORGANIC|MOB_BEAST
 	friendly_verb_continuous = "chitters at"
 	friendly_verb_simple = "chitters at"
 	speak_emote = list("chitters")
@@ -18,7 +19,6 @@
 	attack_verb_simple = "snip"
 	attack_sound = 'sound/weapons/bite.ogg'
 	attack_vis_effect = ATTACK_EFFECT_BITE // Closer than a scratch to a crustacean pinching effect
-	melee_attack_cooldown = 1 SECONDS
 	butcher_results = list(
 		/obj/item/food/meat/crab = 2,
 		/obj/item/stack/sheet/bone = 2,
@@ -36,7 +36,6 @@
 /mob/living/basic/mining/lobstrosity/Initialize(mapload)
 	. = ..()
 	ADD_TRAIT(src, TRAIT_SNOWSTORM_IMMUNE, INNATE_TRAIT)
-	AddElement(/datum/element/mob_grabber)
 	AddElement(/datum/element/footstep, FOOTSTEP_MOB_CLAW)
 	AddElement(/datum/element/basic_eating, food_types = target_foods)
 	AddElement(\
@@ -65,7 +64,6 @@
 
 /// Charge a long way, knock down for longer, and perform an instant melee attack
 /datum/action/cooldown/mob_cooldown/charge/basic_charge/lobster
-	name = "Lobster Rush"
 	charge_distance = 8
 	knockdown_duration = 2.5 SECONDS
 
@@ -75,7 +73,7 @@
 		return
 	var/mob/living/basic/basic_source = source
 	var/mob/living/living_target = target
-	basic_source.melee_attack(living_target, ignore_cooldown = TRUE)
+	basic_source.melee_attack(living_target)
 	basic_source.ai_controller?.set_blackboard_key(BB_BASIC_MOB_FLEEING, FALSE)
 	basic_source.start_pulling(living_target)
 

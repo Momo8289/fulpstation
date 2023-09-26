@@ -46,8 +46,6 @@
 	var/command_report_content
 	/// Whether the report's contents are announced.
 	var/announce_contents = TRUE
-	/// Whether a copy of the report is printed at every console.
-	var/print_report = TRUE
 	/// The sound that's going to accompany our message.
 	var/played_sound = DEFAULT_ANNOUNCEMENT_SOUND
 	/// A static list of preset names that can be chosen.
@@ -77,7 +75,6 @@
 	data["custom_name"] = custom_name
 	data["command_report_content"] = command_report_content
 	data["announce_contents"] = announce_contents
-	data["print_report"] = print_report
 	data["played_sound"] = played_sound
 
 	return data
@@ -106,8 +103,6 @@
 			played_sound = params["picked_sound"]
 		if("toggle_announce")
 			announce_contents = !announce_contents
-		if("toggle_printing")
-			print_report = !print_report
 		if("submit_report")
 			if(!command_name)
 				to_chat(ui_user, span_danger("You can't send a report with no command name."))
@@ -137,9 +132,7 @@
 
 	if(announce_contents)
 		priority_announce(command_report_content, null, report_sound, has_important_message = TRUE)
-
-	if(!announce_contents || print_report)
-		print_command_report(command_report_content, "[announce_contents ? "" : "Classified "][command_name] Update", !announce_contents)
+	print_command_report(command_report_content, "[announce_contents ? "" : "Classified "][command_name] Update", !announce_contents)
 
 	change_command_name(original_command_name)
 

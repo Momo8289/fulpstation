@@ -132,7 +132,7 @@
 	name = "patient stretcher spawner"
 	icon_state = "rollerbed"
 	loot = list(
-		/obj/structure/bed/medical/emergency,
+		/obj/structure/bed/roller,
 		/obj/vehicle/ridden/wheelchair,
 	)
 

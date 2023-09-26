@@ -13,7 +13,6 @@
 	var/harvesting = FALSE
 	var/warming_up = FALSE
 	var/list/operation_order = list() //Order of wich we harvest limbs.
-	var/output_dir = SOUTH //Direction to drop the limbs in
 	var/allow_clothing = FALSE
 	var/allow_living = FALSE
 
@@ -59,12 +58,6 @@
 
 /obj/machinery/harvester/AltClick(mob/user)
 	. = ..()
-	if(!user.can_perform_action(src))
-		return
-	if(panel_open)
-		output_dir = turn(output_dir, -90)
-		to_chat(user, span_notice("You change [src]'s output settings, setting the output to [dir2text(output_dir)]."))
-		return
 	if(!can_interact(user))
 		return
 	if(harvesting || !user || !isliving(user) || state_open)
@@ -128,7 +121,17 @@
 	if(!LAZYLEN(operation_order)) //The list is empty, so we're done here
 		end_harvesting(success = TRUE)
 		return
-	var/turf/target = get_step(src, output_dir)
+	var/turf/target
+	for(var/adir in list(EAST,NORTH,SOUTH,WEST))
+		var/turf/T = get_step(src,adir)
+		if(!T)
+			continue
+		if(isclosedturf(T))
+			continue
+		target = T
+		break
+	if(!target)
+		target = get_turf(src)
 	for(var/obj/item/bodypart/BP in operation_order) //first we do non-essential limbs
 		BP.drop_limb()
 		C.emote("scream")
@@ -216,4 +219,4 @@
 	else if(!harvesting)
 		. += span_notice("Alt-click [src] to start harvesting.")
 	if(in_range(user, src) || isobserver(user))
-		. += span_notice("The status display reads: Harvest speed at <b>[interval*0.1]</b> seconds per organ. Outputting to the <b>[dir2text(output_dir)]</b>.")
+		. += span_notice("The status display reads: Harvest speed at <b>[interval*0.1]</b> seconds per organ.")
