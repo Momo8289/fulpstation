@@ -43,7 +43,6 @@
 
 /datum/symptom/confusion/End(datum/disease/advance/advanced_disease)
 	advanced_disease.affected_mob.remove_status_effect(/datum/status_effect/confusion)
-	REMOVE_TRAIT(advanced_disease.affected_mob, TRAIT_ILLITERATE, DISEASE_TRAIT)
 	return ..()
 
 /datum/symptom/confusion/Activate(datum/disease/advance/advanced_disease)
@@ -57,7 +56,7 @@
 				to_chat(infected_mob, span_warning("[pick("Your head hurts.", "Your mind blanks for a moment.")]"))
 		else
 			to_chat(infected_mob, span_userdanger("You can't think straight!"))
-			infected_mob.adjust_confusion(16 SECONDS * power)
+			infected_mob.adjust_confusion_up_to(16 SECONDS * power, 30 SECONDS)
 			if(brain_damage)
 				infected_mob.adjustOrganLoss(ORGAN_SLOT_BRAIN, 3 * power, 80)
 				infected_mob.updatehealth()

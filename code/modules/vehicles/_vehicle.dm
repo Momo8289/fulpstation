@@ -51,6 +51,17 @@
 	autogrant_actions_controller = list()
 	occupant_actions = list()
 	generate_actions()
+	ADD_TRAIT(src, TRAIT_CASTABLE_LOC, INNATE_TRAIT)
+
+/obj/vehicle/Destroy(force)
+	QDEL_NULL(trailer)
+	inserted_key = null
+	return ..()
+
+/obj/vehicle/Exited(atom/movable/gone, direction)
+	if(gone == inserted_key)
+		inserted_key = null
+	return ..()
 
 /obj/vehicle/Destroy(force)
 	QDEL_NULL(trailer)
